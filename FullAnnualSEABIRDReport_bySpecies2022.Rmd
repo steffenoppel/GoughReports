@@ -1,0 +1,1215 @@
+---
+title: "Annual report of bird monitoring activities on Gough Island"
+author: "Kim Stevens, Vonica Perold, Roelf Daling, Steffen Oppel"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      toc_collapsed: true
+    toc_depth: 3
+    number_sections: true
+    theme: lumen
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning=FALSE,error=FALSE,message=FALSE)
+```
+
+# General overview of bird monitoring on Gough Island
+
+## Background for `r year(endreportperiod)`
+
+Gough Island is a World Heritage site in the South Atlantic Ocean and home to 22 seabird and 2 landbird species. Many of the species nesting on Gough are globally threatened due to the presence of invasive mice. Bird monitoring on Gough started in the 1950s, but regular monitoring with repeatable methods was initiated in 2005, and focusses on 12 bird species that are accessible and relatively easy to monitor. This report summarises the population counts and breeding success of monitored species between `r format(startreportperiod,'%B %Y')` and `r format(endreportperiod,'%B %Y')` and puts those numbers into longer-term perspective for each species. Because there is no time on Gough when no species breeds, this report was generated while some species (Grey Petrel, Atlantic Petrel, Tristan Albatross) were in the middle of their respective breeding season. Results for these species therefore refer to the previous year.
+
+In June and July 2021 the RSPB attempted to eradicate invasive mice from Gough, which required a large amount of work including the construction of infrastructure, the temporary captive holding of safeguarding populations for the two landbird species, and the aerial broadcast of toxic bait across the island to kill mice. Although the operation was completed and bait was applied to all of the island at least twice, some mice survived on Gough and were first detected in December 2021. This report does *not* provide any background and detail about the eradication operation and any associated activities, but solely reports on the routine monitoring activities and their outcomes. Any effects of the eradication operation on routine monitoring activities and results are briefly mentioned for the affected species.
+<br>
+<br>
+
+## General overview of breeding success across species
+
+In the season starting in `r year(startreportperiod)+1` we monitored the breeding success of `r sum(BreedingSuccess$n_nests, na.rm=T)` nests of `r length(unique(BreedingSuccess$Speciesname))` species (Table 1). For the winter-breeding species (Grey Petrel, Atlantic Petrel, Tristan Albatross), the summary refers only to the first year (`r year(startreportperiod)+1`), as the nest monitoring for `r year(endreportperiod)` was still ongoing at the time this report was produced. Breeding success is generally calculated as the number of large chicks or fledglings divided by the number of nests, occupied burrows, or incubating adults. In addition, breeding success for albatrosses is also measured in other study areas by simply counting adult birds and chicks, and these study areas often have lower breeding success than the focal study colonies. Table 1.2.1 therefore presents breeding success from both approaches, and is arranged by increasing breeding success to allow easy comparison of the species with the lowest and the highest breeding success.
+
+Note that for the winter-breeding species (Tristan Albatross and Grey Petrel), the breeding success that is reported is from 2021, and thus from *before* the eradication operation, while the breeding success of all other species occurred *after* the eradication operation. The much reduced mouse abundance after July 2021 therefore resulted in higher breeding success than in previous years for some species, with the exception of Southern Giant Petrels and Great Shearwaters.
+<br>
+
+
+```{r  BreedingSuccess, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+options(knitr.kable.NA = '')
+kable(BreedingSuccess, caption=sprintf("Table 1.2.1: Summary of breeding success on Gough Island in %s, based on either intensively monitored nests in a focal study area or area counts of adults and chicks (for albatrosses only)",paste(year(startreportperiod)+1,year(endreportperiod),sep="-")),col.names=  c("Species", "N of nests", "Breeding success [%] in focal area", "Breeding success [%] across several areas"))
+```
+
+<br>
+<br>
+
+## General overview of individual bird ringing and resighting across species 
+
+From `r format(min(contacts$Date_Time, na.rm=T),'%B %Y')` to `r format(max(contacts$Date_Time, na.rm=T),'%B %Y')` we recorded `r dim(contacts)[1]` encounters with `r length(unique(contacts$BirdID))` individually marked birds of `r length(unique(RingSummary$Speciesname))` species. We newly captured and ringed `r sum(RingSummary$Adult_Ringed)` adult birds of `r dim(RingSummary[RingSummary$Adult_Ringed>0,])[1]` species and `r sum(RingSummary$Chick_Ringed)` chicks of `r dim(RingSummary[RingSummary$Chick_Ringed>0,])[1]` species. The number of individuals resighted or ringed per species is provided in Table 1.3.1. Note that for Tristan Albatrosses this number includes two breeding seasons and therefore a large number of adults due to the biennial breeding cycle of the species. Some of the adults recaptured may have received new rings if their previous rings had been worn and become illegible, and all deployed ring numbers are listed in the Appendix (Section 4).
+
+The large number of individual Gough Buntings that were ringed in 2021 was due to the temporary captive holding of individuals during the eradication operation. These birds were released from October-December 2021, and many have been seen regularly across the island since their release.
+<br>
+
+```{r  RingSummary, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+kable(RingSummary[,1:4], caption=sprintf("Table 1.3.1: Summary of individidually marked birds that were resighted or marked on Gough Island in  %s",paste(year(startreportperiod)+1,year(endreportperiod),sep="-")),col.names=  c("Species","N of adults resighted/recaptured", "N of adults ringed", "N of young ringed"))
+```
+
+<br>
+<br>
+
+
+## Summary of the number of unusual and noteworthy mortalities
+
+From `r format(min(deaths$Date, na.rm=T),'%B %Y')` to `r format(max(deaths$Date, na.rm=T),'%B %Y')` we recorded `r sum(DeathSummary[,2:3], na.rm=T)` noteworthy carcasses of birds on Gough Island. This recording was initiated when an unusually large number of Atlantic Yellow-nosed Albatross carcasses were discovered within regular census areas since 2017. Seabird carcasses of larger species are only collected opportunistically where non-natural or unusual mortality is suspected. No effort is made to count or collect carcasses of smaller seabird species like prions that are routinely predated by skuas. Note that this report does *not* attempt to present a comprehensive list of mortality of birds that occurred as a consequence of the mouse eradication programme, but the mortality of skuas and moorhens was largely due to primary and secondary poisoning.
+
+```{r  DeathSummary, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+options(knitr.kable.NA = '')
+kable(DeathSummary, caption=sprintf("Table 1.4.1: Summary of recorded bird carcasses found on Gough Island in   %s",paste(year(startreportperiod)+1,year(endreportperiod),sep="-")),col.names=  c("Species","N of unringed carcasses recorded", "N of ringed carcasses recorded"))
+```
+
+<br>
+<br>
+
+
+# Species-specific accounts of population status and breeding success
+
+The following sections provide detailed data and summaries about abundance status and breeding success in `r year(endreportperiod)` for each species. The accounts are arranged in alphabetic order to facilitate the rapid look-up of information by non-experts.
+<br>
+<br>
+
+
+## Atlantic Petrel (*Pterodroma incerta*)
+
+Three 120 m transects are located in the lowlands around the base, each consisting of 14-15 quadrats (8 m by 8 m) on alternate sides of the transect centreline. All quadrats are surveyed during laying (July) to count occupied burrows; focal quadrats are surveyed during hatching (September) and fledging (December) to count small and large chicks and determine breeding success. 
+
+
+```{r  atpe_occu, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+ATPE_occu<-seabirdcounts %>% filter(year(Date) == year(startreportperiod)+1) %>%
+  mutate(jday=yday(Date)) %>%
+  filter(jday < yday(ymd("2019-08-12"))) %>%   ### remove all counts of chicks etc. after mid August
+  filter(Cohort %in% c("UNOC","INCU","AON","LOAF","EGG","OCCU")) %>%
+  filter(Species=="ATPE") %>%
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","LOAF","EGG","OCCU"),"OCCU","UNOC")) %>%
+  group_by(Cohort,Colony) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(Total_burrows=OCCU+UNOC) %>%
+  adorn_totals("row") %>%
+  mutate(occu_rate=round((OCCU/(Total_burrows))*100,1)) 
+
+kable(ATPE_occu, caption=sprintf("Table 2.1.1: Burrow occupancy and abundance of burrows in each Atlantic Petrel transect in %i.",year(startreportperiod)+1),col.names=  c("Transect","N of active burrows", "N of empty burrows","Total N of burrows checked","Occupancy rate (%)"))
+```
+<br>
+
+Burrow occupancy is used as an indicator of population size, because the total number of breeding pairs is impossible to assess for burrow-nesting species. Fig. 2.1.1 shows the trend in Atlantic Petrel burrow occupancy over the past 10 years.
+<br>
+
+
+```{r  atpe_occu_trend, fig.cap = "Fig. 2.1.1. Burrow occupancy of Atlantic Petrels on Gough Island over the past 10 years in three monitoring colonies", echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+ATPE_occu_trend<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(endreportperiod)-11) %>%
+  mutate(jday=yday(Date)) %>%
+  filter(jday < yday(ymd("2019-08-12"))) %>%   ### remove all counts of chicks etc. after mid August
+  filter(Cohort %in% c("UNOC","INCU","AON","LOAF","EGG","OCCU")) %>%
+  filter(Species=="ATPE") %>%
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","LOAF","EGG","OCCU"),"OCCU","UNOC")) %>%
+  group_by(Colony, Cohort, Year) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(Total_burrows=OCCU+UNOC) %>%
+  mutate(occu_rate=round((OCCU/(Total_burrows))*100,1)) 
+
+gg13 <- ggplot(ATPE_occu_trend)+
+  geom_point(aes(x=Year, y=occu_rate, color=Colony),size=2) +
+  geom_smooth(aes(x=Year, y=occu_rate),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Occupancy rate (%) of burrows", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)),
+        legend.title = element_text(size=16),
+        legend.position = c(0.85,0.85),
+        legend.background=element_blank(),
+        legend.key=element_blank(),
+        strip.background=element_rect(fill="white", colour="black"))
+gg13
+```
+<br>
+
+Because burrows are counted in quadrats of fixed size, we can also calculate the density of breeding birds as an alternative measure of population size and trend over time. While occupancy compares the relative proportion of occupied vs. unoccupied burrows, density uses the raw count of burrows occupied by a breeding bird divided by the size of the quadrats and may differ from occupancy rate if abandoned burrows are no longer recognisable after several years. Fig. 2.1.2 shows the trend in Atlantic Petrel density over the past 10 years.
+<br>
+
+```{r  atpe_dens_trend, fig.cap = "Fig. 2.1.2. Density of breeding Atlantic Petrels on Gough Island over the past 10 years in three monitoring colonies", echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+ATPE_dens_trend<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(endreportperiod)-11) %>%
+  mutate(jday=yday(Date)) %>%
+  filter(jday < yday(ymd("2019-08-12"))) %>%   ### remove all counts of chicks etc. after mid August
+  filter(Cohort %in% c("INCU","AON","EGG","OCCU")) %>%
+  filter(Species=="ATPE") %>%
+  group_by(Year,Colony,Site) %>%
+  summarise(n_birds=sum(Number)) %>%
+  mutate(Density=n_birds/64) %>%
+  ungroup() %>%
+  group_by(Year,Colony) %>%
+  summarise(mean_dens=mean(Density, na.rm=T)*10000)
+
+gg14 <- ggplot(ATPE_dens_trend)+
+  geom_point(aes(x=Year, y=mean_dens, color=Colony),size=2) +
+  geom_smooth(aes(x=Year, y=mean_dens),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Atlantic Petrel density (birds/ha)", limits=c(0,3000), breaks=seq(0,3000,500)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)),
+        legend.title = element_text(size=16),
+        legend.position = c(0.85,0.85),
+        legend.background=element_blank(),
+        legend.key=element_blank(),
+        strip.background=element_rect(fill="white", colour="black"))
+gg14
+```
+<br>
+
+Breeding success is assessed in three focal quadrats per transect, and is calculated as the number of large chicks counted in Oct-Dec divided by the number of occupied burrows counted in July. Hatching success is the number of small chicks counted in August divided by the number of occupied burrows, and fledging success is the number of large chicks counted in Oct-Dec divided by the number of small chicks. Hatching success and breeding success for `r year(startreportperiod)+1` are presented in Table 2.1.2 below, as the breeding season for `r year(endreportperiod)` had not completed at the time this report was produced.
+
+
+```{r  atpe_bs, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+ATPE_succ<-seabirdcounts %>% filter(year(Date) == year(startreportperiod)+1) %>%
+  filter(!Cohort %in% c("LOAF","NOBR","TERR","UNOC")) %>%
+  filter (Site %in% c(1,2,13,23,26,27,32,38,39)) %>%
+  filter(Species=="ATPE") %>%
+  mutate(month=month(Date)) %>%
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","EGG","OCCU"),"ADULT","CHIC")) %>%
+  mutate(Cohort=ifelse(Cohort=="CHIC" & month %in% c(8,9),"CHICKhatched",ifelse(Cohort=="CHIC" & month>9,"FLEDGLING",ifelse(Cohort=="ADULT" & month %in% c(9),"CHICKhatched",Cohort)))) %>% ## removed August from the condition on ADULT as some incubation counts happened in early August in 2022
+  filter(!(Cohort=="ADULT" & month>9)) %>%   ## remove unhatched eggs etc. that may be counted in December
+  group_by(Cohort,Colony) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  adorn_totals("row") %>%
+  mutate(hatch.succ=round(((CHICKhatched)/(ADULT))*100,1), fledg.succ=round(((FLEDGLING)/(CHICKhatched))*100,1), breed.succ=round(((FLEDGLING)/(ADULT))*100,1))
+
+kable(ATPE_succ, caption=sprintf("Table 2.1.2: Breeding success of Atlantic Petrels in %i.",year(startreportperiod)+1),col.names=  c("Transect","N of active burrows", "N of small chicks","N of fledglings","Hatching success (%)","Fledging success (%)","Breeding success (%)"))
+```
+<br>
+
+Breeding success until 2018 was summarised based on individually labelled burrows, but since 2019 we use the count of occupied burrows and chicks in 9 focal monitoring quadrats. Fig. 2.1.3 shows the trend in Atlantic Petrel breeding success over the past 10 years. No breeding success data could be retrieved for 2011-2013.
+<br>
+
+```{r  atpe_bs_trend, fig.cap = "Fig. 2.1.3. Breeding success of Atlantic Petrels on Gough Island over the past 10 years", echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+ATPE_succ_trend1<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>2018) %>%
+  filter(!Cohort %in% c("LOAF","NOBR","TERR","UNOC")) %>%
+  filter (Site %in% c(1,2,13,23,26,27,32,38,39)) %>%
+  filter(Species=="ATPE") %>%
+  mutate(month=month(Date)) %>%
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","EGG","OCCU"),"ADULT","CHIC")) %>%
+  mutate(Cohort=ifelse(Cohort=="CHIC" & month %in% c(8,9),"CHICKhatched",ifelse(Cohort=="CHIC" & month>9,"FLEDGLING",ifelse(Cohort=="ADULT" & month %in% c(9),"CHICKhatched",Cohort)))) %>%
+  filter(!(Cohort=="ADULT" & month>9)) %>%   ## remove unhatched eggs etc. that may be counted in December
+  group_by(Year,Cohort) %>%
+  summarise(n_birds=sum(Number, na.rm=T)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(breed.succ=(FLEDGLING)/(ADULT)) %>%
+  select(ADULT,breed.succ)
+
+ATPE_succ_trend<-nests %>% 
+  filter(Species=="ATPE") %>%
+  mutate(count=1) %>%
+  group_by(Year) %>%
+  summarise(ADULT=sum(count),breed.succ=mean(SUCCESS, na.rm=T)) %>%
+  bind_rows(ATPE_succ_trend1) %>%
+  mutate(breed.succ=round(breed.succ*100,1)) %>%
+  filter(!Year %in% c(2012,2013,2022))
+
+gg15 <- ggplot(ATPE_succ_trend)+
+  geom_point(aes(x=Year, y=breed.succ),size=2,col="firebrick") +
+  geom_smooth(data=ATPE_succ_trend, aes(x=Year, y=breed.succ),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Breeding success (%) in focal quadrats", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-12,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg15
+```
+<br>
+<br>
+
+## Atlantic Yellow-nosed Albatross (*Thalassarche chlororhynchos*)
+
+There are 11 study areas located in the lowlands around the base, where all breeding pairs are counted to provide long-term data on abundance trends. The number of incubating birds counted in October is used as an indicator of population size, with an incubating bird representing a breeding pair at the time of the census. Fig. 2.2.1 shows the trend in Atlantic Yellow-nosed Albatross abundance over the past 10 years. Note that prior to 2015 census areas were delineated by landmarks only (since 2015 boundaries were marked by GPS), which may lead to minor imprecision in counts due to the inclusion or exclusion of birds in border areas.
+<br>
+
+```{r  ayna_trend, fig.cap = "Fig. 2.2.1. Number of breeding pairs of Atlantic Yellow-nosed Albatross in 11 survey areas on Gough Island over the past 10 years", echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+AYNA_trend<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(endreportperiod)-11) %>%
+    filter(Year<2022) %>%
+  mutate(jday=yday(Date)) %>%
+  filter(jday < yday(ymd("2019-11-15"))) %>%   ### remove all counts of chicks etc. after mid August
+  filter(Species=="AYNA") %>%
+  filter(Breed_Stage=="INCU") %>%
+  filter(Cohort %in% c("TERR","INCU","AON","AD")) %>%
+  group_by(Year) %>%
+  summarise(n_birds=sum(Number))
+
+gg21 <- ggplot(AYNA_trend)+
+  geom_point(aes(x=Year, y=n_birds),size=2,col="firebrick") +
+  geom_smooth(aes(x=Year, y=n_birds),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Number of breeding pairs", limits=c(300,800), breaks=seq(300,800,100)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg21
+```
+<br>
+
+Breeding success is measured in count areas 2, 3, 8, and 10 by visiting during incubation (October), hatching (December) and fledging (March). Hatching success is the number of small chicks counted in December, divided by the number of breeding pairs; fledging success is the number of large chicks counted in March, divided by the number of small chicks. Breeding population size and breeding success for `r year(startreportperiod)+1` are presented in Table 2.2.1 below. Please note that due to the eradication work and a mouse discovery in December no count of chicks was possible in December 2021, and therefore no hatching and fledging success could be calculated.  
+
+
+```{r  ayna_breed_succ, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+## changed from 2021 because no chick count was done for AYNA
+ayna_breed_succ<-seabirdcounts %>% filter(Date > startreportperiod+months(6)) %>% filter(Date < endreportperiod) %>%
+  mutate(Year=year(Date)) %>%
+  filter(Cohort %in% c("INCU","AON","CHIC","EGG","ATTC","FLED","BROO","AD")) %>%
+  filter(Species=="AYNA") %>%
+  mutate(month=month(Date)) %>%
+  filter(!(Year==(year(startreportperiod)+1) & month<6)) %>% ## remove the fledgling count from previous season
+  filter(!(Year==year(endreportperiod) & month>6)) %>% ## remove the incubator count from next season
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","EGG","TERR","AD"),"BREED_PAIR","CHIC")) %>%
+  mutate(Cohort=ifelse(Cohort=="CHIC" & month %in% c(11,12),"CHICKhatched",ifelse(Cohort=="CHIC" & month<6,"FLEDGLING",ifelse(Cohort=="BREED_PAIR" & month %in% c(11,12),"CHICKhatched",Cohort)))) %>%
+  group_by(Cohort,Colony) %>%
+  summarise(n_birds=sum(Number)) %>%
+  filter(!(Cohort=="FLEDGLING" & Colony=="Area 1")) %>% ## remove the fledgling count in Area 1 to avoid confusion with Fig. 2.2
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(order=as.numeric(gsub("Area", "", Colony))) %>%
+  arrange(order) %>%
+  select(-order) %>%
+  adorn_totals("row") %>%
+  mutate(#hatch.succ=round(((CHICKhatched)/(BREED_PAIR))*100,1),
+         #fledg.succ=round(((FLEDGLING)/(CHICKhatched))*100,1),
+         breed.succ=round(((FLEDGLING)/(BREED_PAIR))*100,1))
+PAIRS<-sum(ayna_breed_succ[!is.na(ayna_breed_succ$FLEDGLING),2])-ayna_breed_succ[12,2]
+#ayna_breed_succ[12,5]<-round((ayna_breed_succ[12,3]/PAIRS)*100,1)
+#ayna_breed_succ[12,7]<-round((ayna_breed_succ[12,4]/PAIRS)*100,1)
+ayna_breed_succ[12,4]<-round((ayna_breed_succ[12,3]/PAIRS)*100,1)  ## when no chick count happened then no hatch/fledg success is calculated
+
+if(ayna_breed_succ[1,2]!=BreedingSuccess[BreedingSuccess$Speciesname=="Atlantic Yellow-nosed Albatross",2]){
+  ayna_breed_succ[1,2]<-BreedingSuccess[BreedingSuccess$Speciesname=="Atlantic Yellow-nosed Albatross",2]
+  #ayna_breed_succ[1,5]<-round(((ayna_breed_succ[1,3]/ayna_breed_succ[1,2])/100),1)
+}
+ayna_breed_succ[1,3]<-as.integer(round(ayna_breed_succ[1,2]*(BreedingSuccess[BreedingSuccess$Speciesname=="Atlantic Yellow-nosed Albatross",2]/100),0))
+#ayna_breed_succ[1,6]<-round(((ayna_breed_succ[1,4]/ayna_breed_succ[1,3])*100),1)
+ayna_breed_succ[1,4]<-BreedingSuccess[BreedingSuccess$Speciesname=="Atlantic Yellow-nosed Albatross",3]
+
+
+options(knitr.kable.NA = '')
+kable(ayna_breed_succ, caption=sprintf("Table 2.2.1: Abundance and breeding success of Atlantic Yellow-nosed Albatrosses in %i.",year(startreportperiod)+1),col.names=  c("Count area","N of pairs", "N of fledglings","Breeding success (%)"))
+```
+<br>
+
+Breeding success is also assessed in an intensive study colony (Area 1), where individual nests are marked and monitored to completion. This approach allows the most reliable data for long-term comparisons of breeding success. Fig. 2.2.2 shows the trend in Atlantic Yellow-nosed Albatross breeding success over the past 10 years.
+<br>
+
+```{r  ayna_bs_trend, fig.cap = "Fig. 2.2.2. Breeding success of Atlantic Yellow-nosed Albatross in Area 1 on Gough Island over the past 10 years", echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+AYNA_succ_trend<-nests %>% 
+  filter(Species=="AYNA") %>%
+  filter(Year>year(endreportperiod)-11) %>%
+  filter(Year<2022) %>%
+  mutate(count=1) %>%
+  group_by(Year) %>%
+  summarise(ADULT=sum(count),breed.succ=mean(SUCCESS, na.rm=T)) %>%
+  mutate(breed.succ=round(breed.succ*100,1))
+
+gg22 <- ggplot(AYNA_succ_trend)+
+  geom_point(aes(x=Year, y=breed.succ),size=2,col="firebrick") +
+  geom_smooth(aes(x=Year, y=breed.succ),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Breeding success (%)", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg22
+```
+<br>
+<br>
+
+## Great Shearwater (*Ardenna gravis*)
+
+Three transects are located in the lowlands around the base, each consisting of 10-11 quadrats (8 m by 8 m) on alternate sides of the transect centreline. All quadrats are surveyed during laying (November) to count occupied burrows; focal quadrats are surveyed during hatching (January) and fledging (April) to count small and large chicks and determine breeding success.
+
+```{r  grsh_occu, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+GRSH_occu<-seabirdcounts %>% filter(Date > startreportperiod+months(7)) %>% filter(Date < endreportperiod) %>%
+  filter(Cohort %in% c("UNOC","INCU","AON","LOAF","EGG")) %>%
+  filter(Colony %in% c("Tumbledown","Snoekgat","Seal Beach")) %>%
+  filter(Species=="GRSH") %>%
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","LOAF","EGG"),"OCCU","UNOC")) %>%
+  group_by(Cohort,Colony) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(Total_burrows=OCCU+UNOC) %>%
+  adorn_totals("row") %>%
+  mutate(occu_rate=round((OCCU/(Total_burrows))*100,1)) 
+
+kable(GRSH_occu, caption=sprintf("Table 2.3.1: Burrow occupancy and abundance of burrows in each Great Shearwater transect in %i.",year(startreportperiod)+1),col.names=  c("Transect","N of active burrows", "N of empty burrows","Total N of burrows checked","Occupancy rate (%)"))
+```
+<br>
+
+Burrow occupancy is used as an indicator of population size, because the total number of breeding pairs is impossible to assess for burrow-nesting species. Fig. 2.3.1 shows the trend in Great Shearwater burrow occupancy since 2014, when counts were systematically recorded (data from before 2014 refer to labelled burrows and are not comparable).
+<br>
+
+```{r  grsh_occu_trend, fig.cap = "Fig. 2.3.1. Burrow occupancy of Great Shearwaters on Gough Island since 2014", echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+GRSH_occu_trend<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(startreportperiod)-9) %>%
+  mutate(jday=yday(Date)) %>%
+  mutate(Year=ifelse(jday<200,(Year-1),Year)) %>% ### ensure consistency of breeding seasons despite change in calendar year
+  filter(Cohort %in% c("UNOC","INCU","AON","LOAF","EGG","OCCU")) %>%
+  filter(Colony %in% c("Tumbledown","Snoekgat","Seal Beach")) %>%
+  filter(Species=="GRSH") %>%
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","LOAF","EGG","OCCU"),"OCCU","UNOC")) %>%
+  group_by(Colony,Year,Cohort) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(Total_burrows=OCCU+UNOC) %>%
+  mutate(occu_rate=round((OCCU/(Total_burrows))*100,1))
+
+gg31 <- ggplot(GRSH_occu_trend)+
+  geom_point(aes(x=Year, y=occu_rate,col=Colony),size=2) +
+  geom_smooth(aes(x=Year, y=occu_rate),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Occupancy rate (%) of burrows", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)),
+        legend.title = element_text(size=16),
+        legend.position = c(0.15,0.85),
+        legend.background=element_blank(),
+        legend.key=element_blank(),
+        strip.background=element_rect(fill="white", colour="black"))
+gg31
+```
+<br>
+
+Because burrows are counted in quadrats of fixed size, we can also calculate the density of breeding birds as an alternative measure of population size and trend over time. While occupancy compares the relative proportion of occupied vs. unoccupied burrows, density uses the raw count of burrows occupied by a breeding bird divided by the size of the quadrats and may differ from occupancy rate if abandoned burrows are no longer recognisable after several years. Fig. 2.3.2 shows the trend in Great Shearwater density since 2014.
+<br>
+
+```{r  grsh_dens_trend, fig.cap = "Fig. 2.3.2. Density of Great Shearwaters on Gough Island since 2014 in three monitoring colonies",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+GRSH_density_trend<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(startreportperiod)-9) %>%
+  mutate(jday=yday(Date)) %>%
+  mutate(Year=ifelse(jday<200,(Year-1),Year)) %>% ### ensure consistency of breeding seasons despite change in calendar year
+  filter(Cohort %in% c("INCU","AON","EGG","OCCU")) %>%
+  filter(Colony %in% c("Tumbledown","Snoekgat","Seal Beach")) %>%
+  filter(Species=="GRSH") %>%
+  group_by(Year,Colony,Site) %>%
+  summarise(n_birds=sum(Number)) %>%
+  mutate(Density=n_birds/64) %>%
+  ungroup() %>%
+  group_by(Year,Colony) %>%
+  summarise(mean_dens=mean(Density, na.rm=T)*10000) 
+
+gg32 <- ggplot(GRSH_density_trend)+
+  geom_point(aes(x=Year, y=mean_dens, color=Colony),size=2) +
+  geom_smooth(aes(x=Year, y=mean_dens),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Great Shearwater density (birds/ha) ", limits=c(0,6000), breaks=seq(0,6000,1000)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text=element_text(size=18, color="black"),
+        axis.title=element_text(size=18),
+        legend.title = element_text(size=16),
+        legend.position = c(0.15,0.85),
+        legend.background=element_blank(),
+        legend.key=element_blank(),
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg32
+```
+<br>
+
+Breeding success is assessed in three focal quadrats per transect, and is calculated as the number of large chicks counted in April divided by the number of occupied burrows counted in November. Hatching success is the number of small chicks counted in January divided by the number of occupied burrows, and fledging success is the number of large chicks counted in April divided by the number of small chicks. Hatching success and breeding success for `r year(startreportperiod)+1` are presented in Table 2.3.2 below.
+
+
+
+```{r  grsh_bs, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+GRSH_succ<-seabirdcounts %>% filter(Date>startreportperiod+months(6)) %>% filter(Date<endreportperiod) %>% 
+  filter(Cohort %in% c("CHIC","INCU","AON","EGG","ATTC","LOAF")) %>%  ### added LOAF in 2021 because adult counts were lower than chick counts
+  filter(Colony %in% c("Tumbledown","Snoekgat","Seal Beach")) %>%
+  mutate(Site=if_else(grepl("Q",Site)==T,str_remove(Site, "Q"),Site)) %>%
+  mutate(Quad=paste(Colony,Site,sep="")) %>%
+  mutate(month=month(Date)) %>%
+  filter(Species=="GRSH") %>%
+  filter (Quad %in% c("Snoekgat2","Snoekgat4","Snoekgat8","Seal Beach1","Seal Beach5","Seal Beach7","Tumbledown1","Tumbledown2","Tumbledown8")) %>%
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","EGG","OCCU","LOAF"),"ADULT","CHIC")) %>%   ### added LOAF in 2021 because adult counts were lower than chick counts
+  mutate(Cohort=ifelse(Cohort=="CHIC" & month %in% c(1,2),"CHICKhatched",ifelse(Cohort=="CHIC" & month>2,"FLEDGLING",ifelse(Cohort=="ADULT" & month %in% c(1,2),"CHICKhatched",Cohort)))) %>%
+  #filter(Breed_Stage=="INCU") %>%
+  group_by(Cohort,Colony) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(CHICKhatched=if_else(is.na(FLEDGLING),CHICKhatched,if_else(FLEDGLING>CHICKhatched,FLEDGLING,CHICKhatched))) %>%
+  mutate(ADULT=if_else(is.na(CHICKhatched),ADULT,if_else(CHICKhatched>ADULT,CHICKhatched,ADULT))) %>%
+  adorn_totals("row") %>%
+  mutate(hatch.succ=round(((CHICKhatched)/(ADULT))*100,1), fledg.succ=round(((FLEDGLING)/(CHICKhatched))*100,1), breed.succ=round(((FLEDGLING)/(ADULT))*100,1))
+
+## For 2022, manually adjust values due to missing fledgling count in Tumbledown
+# GRSH_succ[4,7]<-round(sum((GRSH_succ[1:2,4])/sum(GRSH_succ[1:2,2]))*100,1)
+# GRSH_succ[4,6]<-round((sum(GRSH_succ[1:2,4])/sum(GRSH_succ[1:2,3]))*100,1)
+
+kable(GRSH_succ, caption=sprintf("Table 2.3.2: Breeding success of Great Shearwaters in %i.",year(startreportperiod)+1),col.names=  c("Transect","N of active burrows", "N of small chicks","N of fledglings","Hatching success (%)","Fledging success (%)","Breeding success (%)"))
+```
+<br>
+
+Breeding success until 2018 was summarised based on individually labelled burrows, but since 2019 we use the count of occupied burrows and chicks in 9 focal monitoring quadrats. Fig. 2.3.3 shows the trend in Great Shearwater breeding success over the past 10 years.
+<br>
+
+```{r  grsh_bs_trend, fig.cap = "Fig. 2.3.3. Breeding success of Great Shearwaters on Gough Island over the past 10 years",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+GRSH_succ_trend1<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(startreportperiod)-9) %>%
+  mutate(jday=yday(Date)) %>%
+  mutate(Year=ifelse(jday<200,(Year-1),Year)) %>% ### ensure consistency of breeding seasons despite change in calendar year
+  filter(Cohort %in% c("CHIC","INCU","AON","EGG","ATTC","LOAF")) %>%
+  filter(Colony %in% c("Tumbledown","Snoekgat","Seal Beach")) %>%
+  mutate(Site=if_else(grepl("Q",Site)==T,str_remove(Site, "Q"),Site)) %>%
+  mutate(Quad=paste(Colony,Site,sep="")) %>%
+  mutate(month=month(Date)) %>%
+  filter(Species=="GRSH") %>%
+  #filter(!(Colony=="Tumbledown" & Year==2021)) %>% ## no fledgling counts from that year and colony
+  filter(!(Cohort=="LOAF" & Year<2020)) %>% ## erroneous use of 'LOAF' for 'occupied burrows in 2020 and 2021
+  filter (Quad %in% c("Snoekgat2","Snoekgat4","Snoekgat8","Seal Beach1","Seal Beach5","Seal Beach7","Tumbledown1","Tumbledown2","Tumbledown8")) %>%
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","EGG","OCCU","LOAF"),"ADULT","CHIC")) %>%
+  mutate(Cohort=ifelse(Cohort=="CHIC" & month %in% c(1,2),"CHICKhatched",ifelse(Cohort=="CHIC" & month>2,"FLEDGLING",ifelse(Cohort=="ADULT" & month %in% c(1,2),"CHICKhatched",Cohort)))) %>%
+  #filter(Year==2021 & Breed_Stage=="INCU")
+  group_by(Year,Cohort) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(CHICKhatched=if_else(FLEDGLING>CHICKhatched,FLEDGLING,CHICKhatched)) %>%
+  mutate(ADULT=if_else(CHICKhatched>ADULT,CHICKhatched,ADULT)) %>%
+  mutate(breed.succ=FLEDGLING/ADULT) %>%
+  select(Year,ADULT,breed.succ)
+
+GRSH_succ_trend<-nests %>% 
+  filter(Year>year(startreportperiod)-9) %>%
+  filter(Species=="GRSH") %>%
+  mutate(count=1) %>%
+  group_by(Year) %>%
+  summarise(ADULT=sum(count),breed.succ=mean(SUCCESS, na.rm=T)) %>%
+  filter(Year<2018) %>%
+  bind_rows(GRSH_succ_trend1) %>%
+  mutate(breed.succ=round(breed.succ*100,1))
+
+gg33 <- ggplot(GRSH_succ_trend)+
+  geom_point(aes(x=Year, y=breed.succ),size=2,col="firebrick") +
+  geom_smooth(aes(x=Year, y=breed.succ),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Breeding success (%) in focal quadrats", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg33
+```
+<br>
+<br>
+
+
+## Grey Petrel (*Procellaria cinerea*)
+
+Grey Petrels nest in burrows in the uplands of Gough, and monitoring their abundance is not feasible. Therefore, monitoring is limited to their breeding success. Previously marked Grey Petrel breeding burrows in Gonydale are checked regularly during laying period (March-May), and all occupied burrows are followed until fledging (September). Note that the breeding success reported here refers to the 2021 breeding season which started *before* the mouse eradication operation. 
+
+
+```{r  grpe_bs, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+GRPE_nests<-nests %>% 
+  filter(Year==year(startreportperiod)+1) %>%
+  filter(Species=="GRPE") %>%
+  filter(!is.na(Completed))
+GRPE_failed_nests<-GRPE_nests %>% filter(SUCCESS==0) %>%
+  filter(!is.na(Completed)) %>% arrange(Nest_label)
+
+GRPE_stage_before_fail<-nestvisits %>%
+  filter(Nest_label %in% GRPE_failed_nests$Nest_label) %>%
+  filter(Status=="Alive") %>%
+  group_by(Nest_label) %>%
+  summarise(last=max(Date),LastStage=last(Stage)) %>% arrange(Nest_label)
+GRPE_failed_nests$LastStage<-GRPE_stage_before_fail$LastStage[match(GRPE_failed_nests$Nest_label,GRPE_stage_before_fail$Nest_label)]
+GRPE_failed_nests$LastStage[is.na(GRPE_failed_nests$LastStage)]<-GRPE_failed_nests$StageFound[is.na(GRPE_failed_nests$LastStage)]
+
+
+GRPE_summary<-GRPE_nests %>% filter(SUCCESS==1) %>%
+  mutate(LastStage="FLED") %>%
+  bind_rows(GRPE_failed_nests) %>%
+  mutate(count=1) %>%
+  mutate(LastStage=ifelse(LastStage=="FAIL","INCU",LastStage)) %>%
+  group_by(LastStage) %>%
+  summarise(n=sum(count)) %>%
+  spread(key=LastStage,value=n) %>%
+  mutate(ADULT=INCU+FLED+CHIC) %>%
+  mutate(CHIC=FLED+CHIC) %>%
+  mutate(hatch.succ=round(((CHIC)/(ADULT))*100,1), fledg.succ=round(((FLED)/(CHIC))*100,1), breed.succ=round(((FLED)/(ADULT))*100,1)) %>%
+  select(ADULT,CHIC,FLED,hatch.succ,fledg.succ,breed.succ)
+
+kable(GRPE_summary, caption=sprintf("Table 2.4.1: Abundance and breeding success of Grey Petrels in %i.",year(startreportperiod)+1),col.names=  c("N of nests", "N of small chicks","N of fledglings","Hatching success (%)","Fledging success (%)","Breeding success (%)"))
+```
+<br>
+
+```{r  grpe_bs_trend, fig.cap = "Fig. 2.4.1. Breeding success of Grey Petrels on Gough Island over the past 11 years",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+GRPE_succ_trend<-nests %>% 
+  filter(Year>year(startreportperiod)-11) %>%
+  filter(Year<year(endreportperiod)) %>%
+  filter(Species=="GRPE") %>%
+  mutate(count=1) %>%
+  group_by(Year) %>%
+  summarise(ADULT=sum(count),breed.succ=mean(SUCCESS, na.rm=T)) %>%
+  mutate(breed.succ=round(breed.succ*100,1))
+
+gg41 <- ggplot(GRPE_succ_trend)+
+  geom_point(aes(x=Year, y=breed.succ),size=2,col="firebrick") +
+  geom_smooth(aes(x=Year, y=breed.succ),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Breeding success (%) in Gonydale", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-12,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg41
+```
+<br>
+<br>
+
+
+## MacGillivray's Prion (*Pachyptila macgillivrayi*)
+
+On Gough Island, MacGillivray's Prion was considered as the same species as Broad-billed Prion *P. vittata* until around 2014, when the occurrence of consistently different bill sizes led to the realisation that there were actually two prion species nesting on Gough. The species nests in small burrows and an accessible cave ('Prion Cave') on Gough, where 50 nests are monitored every year from laying (November) to fledging (March). Breeding success is calculated as the number of large chicks counted in March divided by the number of marked nests counted in November. Hatching success is the number of small chicks counted in January divided by the number of marked nests, and fledging success is the number of large chicks counted in March divided by the number of small chicks. Hatching success and breeding success for `r year(startreportperiod)+1` are presented in Table 2.5.1 below.
+
+
+```{r  mapr_bs, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+MAPR_nests<-nests %>% 
+  filter(Year==year(startreportperiod)+1) %>%
+  filter(Year<2022) %>%
+  filter(Species=="MAPR")
+MAPR_failed_nests<-MAPR_nests %>% filter(SUCCESS==0) %>% arrange(Nest_label)
+
+MAPR_stage_before_fail<-nestvisits %>%
+  filter(Nest_label %in% MAPR_failed_nests$Nest_label) %>%
+  filter(Status=="Alive") %>%
+  group_by(Nest_label) %>%
+  summarise(last=max(Date),LastStage=last(Stage)) %>% arrange(Nest_label)
+MAPR_failed_nests$LastStage<-MAPR_stage_before_fail$LastStage
+
+MAPR_summary<-MAPR_nests %>% filter(SUCCESS==1) %>% bind_rows(MAPR_failed_nests) %>%
+  mutate(count=1) %>%
+  group_by(LastStage) %>%
+  summarise(n=sum(count)) %>%
+  spread(key=LastStage,value=n) %>%
+  mutate(FLED=ifelse("FLED" %in% MAPR_nests$LastStage,FLED,0)) %>%
+  mutate(ADULT=INCU+FLED+CHIC) %>%
+  mutate(CHIC=FLED+CHIC) %>%
+  mutate(hatch.succ=round(((CHIC)/(ADULT))*100,1), fledg.succ=round(((FLED)/(CHIC))*100,1), breed.succ=round(((FLED)/(ADULT))*100,1)) %>%
+  select(ADULT,CHIC,FLED,hatch.succ,fledg.succ,breed.succ)
+
+kable(MAPR_summary, caption=sprintf("Table 2.5.1: Breeding success of MacGillivray's Prion in %i.",year(startreportperiod)+1),col.names=  c("N of nests", "N of small chicks","N of fledglings","Hatching success (%)","Fledging success (%)","Breeding success (%)"))
+```
+<br>
+
+```{r  mapr_bs_trend, fig.cap = "Fig. 2.5.1. Breeding success of MacGillivray's Prion on Gough Island since 2014",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+MAPR_succ_trend<-nests %>% 
+  filter(Year>year(startreportperiod)-9) %>%
+  filter(Year<=year(endreportperiod)) %>%
+  filter(Year<2022) %>%
+  #filter(!(Completed==0 & LastStage=="INCU")) %>%
+  filter(Species=="MAPR") %>%
+  mutate(count=1) %>%
+  group_by(Year) %>%
+  summarise(ADULT=sum(count),breed.succ=mean(SUCCESS, na.rm=T)) %>%
+  mutate(breed.succ=round(breed.succ*100,1))
+
+gg51 <- ggplot(MAPR_succ_trend)+
+  geom_line(aes(x=Year, y=breed.succ),size=1.5,col="cornflowerblue") +
+  geom_point(aes(x=Year, y=breed.succ),size=2,col="firebrick") +
+  #geom_smooth(aes(x=Year, y=breed.succ),method="loess") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Breeding success (%) in Prion Cave", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg51
+```
+<br>
+<br>
+
+## Northern Rockhopper Penguin (*Eudyptes moseleyi*)
+
+There are two long-term study areas at Tumbledown and Seal Beach, and since 2017 the colony at Rockhopper Point has been surveyed using photos. At Tumbledown and Seal Beach all breeding pairs are counted during laying (in October) to provide long-term data on abundance trends. Fig. 2.6.1 shows the trend in Northern Rockhopper Penguin abundance over the past 10 years at Tumbledown and Seal Beach.
+<br>
+
+```{r  nrpe_trend, fig.cap = "Fig. 2.6.1. Number of breeding pairs of Northern Rockhopper Penguins at Tumbledown and Seal Beach on Gough Island over the past 10 years",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+nrpe_trend<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(endreportperiod)-11) %>%
+  mutate(jday=yday(Date)) %>%
+  filter(jday < yday(ymd("2019-11-15"))) %>%   ### remove all counts of chicks etc. after mid August
+  filter(Species=="NRPE") %>%
+  filter(Colony %in% c("Tumbledown","Seal Beach")) %>%
+  filter(Method %in% c("COLO","PHOTO")) %>%
+  filter(Breed_Stage=="INCU") %>%
+  filter(Cohort %in% c("TERR","INCU","AON")) %>% ## removed 'AD' as that generally duplicates INCU in 2012, 2013, and 2015
+  group_by(Year) %>%
+  summarise(n_birds=sum(Number))
+
+gg61 <- ggplot(nrpe_trend)+
+  geom_point(aes(x=Year, y=n_birds),size=2,col="firebrick") +
+  geom_smooth(aes(x=Year, y=n_birds),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Number of breeding pairs", limits=c(1000,5000), breaks=seq(1000,5000,500)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.y=element_text(size=16, color="black"),
+        axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg61
+```
+<br>
+
+Breeding success is measured at Tumbledown and Seal Beach by counting incubating birds (October), freshly hatched chicks (November) and larger chicks during the creche period (January). Breeding success is the number of large chicks counted in January divided by the number of breeding pairs. Breeding population size and breeding success for `r year(startreportperiod)+1` are presented in Table 2.6.1 below. Note that due to nests and small chicks hidden between boulders and rock crevices the count of small chicks is not very accurate, and the number of small chicks being counted may be lower than the number of chicks that actually hatched. No estimates for hatching and fledging success are therefore provided as they may be misleading.  
+
+
+```{r  nrpe_breed_succ, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+nrpe_breed_succ<-seabirdcounts %>% filter(Date > startreportperiod+months(7)) %>% filter(Date < endreportperiod) %>%
+  mutate(Year=year(Date)) %>%
+  filter(Cohort %in% c("INCU","AON","CHIC","EGG","ATTC","FLED","BROO","TERR","AD")) %>%
+  filter(Species=="NRPE") %>%  filter(Species=="NRPE") %>%
+  filter(Colony %in% c("Tumbledown","Seal Beach")) %>%
+  mutate(month=month(Date)) %>%
+  filter(!(Year==(year(startreportperiod)+1) & month<6)) %>% ## remove the fledgling count from previous season
+  filter(!(Year==year(endreportperiod) & month>6)) %>% ## remove the incubator count from next season
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","EGG","TERR","AD"),"BREED_PAIR","CHIC")) %>%
+  mutate(Cohort=ifelse(Cohort=="CHIC" & month %in% c(11,12),"CHICKhatched",ifelse(Cohort=="CHIC" & month<6,"FLEDGLING",ifelse(Cohort=="BREED_PAIR" & month %in% c(11,12),"CHICKhatched",Cohort)))) %>%
+  group_by(Cohort,Colony) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(order=as.numeric(gsub("Area", "", Colony))) %>%
+  arrange(order) %>%
+  select(-order) %>%
+  adorn_totals("row") %>%
+  mutate(breed.succ=round(((FLEDGLING)/(BREED_PAIR))*100,1))
+
+options(knitr.kable.NA = '')
+kable(nrpe_breed_succ, caption=sprintf("Table 2.6.1: Abundance and breeding success of Northern Rockhopper Penguins in %i.",year(startreportperiod)+1),col.names=  c("Colony","N of pairs", "N of small chicks","N of creche chicks","Breeding success (%)"))
+```
+<br>
+
+Breeding success has been measured at Tumbledown and Seal Beach since 2011. Fig. 2.6.2 shows the trend in Northern Rockhopper Penguin breeding success over the past 10 years.
+<br>
+
+```{r  nrpe_bs_trend, fig.cap = "Fig. 2.6.2. Breeding success of Northern Rockhopper Penguin on Gough Island over the past 9 years",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+nrpe_succ_trend<- seabirdcounts %>% mutate(Year=year(Date)) %>%
+  mutate(month=month(Date)) %>%
+  mutate(Season=ifelse(month<6, year(Date)-1,year(Date))) %>%
+  filter(Season>year(endreportperiod)-10) %>%
+  filter(Cohort %in% c("INCU","AON","CHIC","EGG","ATTC","FLED","BROO","TERR")) %>%
+  filter(Species=="NRPE") %>%
+  filter(Colony %in% c("Tumbledown","Seal Beach")) %>% #filter(Season<2014)
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","EGG","TERR","AD"),"BREED_PAIR","CHIC")) %>%
+  mutate(Cohort=ifelse(Cohort=="CHIC" & month %in% c(11,12),"CHICKhatched",ifelse(Cohort=="CHIC" & month<6,"FLEDGLING",ifelse(Cohort=="BREED_PAIR" & month %in% c(11,12),"CHICKhatched",Cohort)))) %>%
+  group_by(Season,Cohort) %>%
+  summarise(n_birds=sum(Number)) %>%
+  filter(!Cohort=="CHICKhatched") %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(breed.succ=round(((FLEDGLING)/(BREED_PAIR))*100,1))
+
+### insert missing data from 2012 through nest monitoring data:
+nrpe_succ_trend$breed.succ[nrpe_succ_trend$Season==2012]<- as.numeric(nests %>% 
+                                                                        filter(Species=="NRPE") %>%
+                                                                        filter(Year==2012) %>%
+                                                                        mutate(count=1) %>%
+                                                                        summarise(ADULT=sum(count),breed.succ=mean(SUCCESS, na.rm=T)) %>%
+                                                                        mutate(breed.succ=round(breed.succ*100,1)) %>%
+                                                                        select(breed.succ))
+
+
+gg62 <- ggplot(nrpe_succ_trend)+
+  geom_point(aes(x=Season, y=breed.succ),size=2,col="firebrick") +
+  geom_smooth(aes(x=Season, y=breed.succ),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Breeding success (%)", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-10,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg62
+```
+<br>
+<br>
+
+## Sooty Albatross (*Phoebetria fusca*)
+
+There are 16 study areas located along the sea cliffs around the weather station and inland cliffs towards Tafelkop, where all breeding pairs are counted to provide long-term data on abundance trends. The number of incubating birds counted in October is used as an indicator of population size, with an incubating bird representing a breeding pair at the time of the census. Fig. 2.7.1 shows the trend in Sooty Albatross abundance over the past 10 years.
+<br>
+
+
+```{r  soal_trend, fig.cap = "Fig. 2.7.1. Number of breeding Sooty Albatross pairs in 16 survey areas on Gough Island over the past 10 years",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+SOAL_trend<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(endreportperiod)-11) %>%
+  filter(Year<2022) %>%
+  mutate(jday=yday(Date)) %>%
+  filter(jday < yday(ymd("2019-11-15"))) %>%   ### remove all counts of chicks etc. after mid November
+  filter(Species=="SOAL") %>%
+  filter(Breed_Stage=="INCU") %>%
+  filter(Cohort %in% c("TERR","INCU","AON")) %>%   # not include AD as they seem to be duplicates ,"AD"
+  group_by(Year) %>%
+  summarise(n_birds=sum(Number))
+
+gg71 <- ggplot(SOAL_trend)+
+  geom_point(aes(x=Year, y=n_birds),size=2,col="firebrick") +
+  geom_smooth(aes(x=Year, y=n_birds),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Number of breeding pairs", limits=c(0,300), breaks=seq(0,300,50)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg71
+```
+<br>
+
+Breeding success is coarsely assessed in these 16 count areas by visiting during incubation (October), hatching (December) and fledging (April). Hatching success is the number of small chicks counted in December divided by the number of breeding pairs; fledging success is the number of large chicks counted in April divided by the number of small chicks. Note that fledging success may be overestimated because the small chicks are difficult to see. Breeding population size and breeding success for `r year(startreportperiod)+1` are presented in Table 2.7.1 below.  
+
+```{r  SOAL_breed_succ, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+SOAL_breed_succ<-seabirdcounts %>% filter(Date > startreportperiod +months(7)) %>% filter(Date < endreportperiod) %>%
+  mutate(Year=year(Date)) %>%
+  filter(Cohort %in% c("INCU","AON","CHIC","EGG","ATTC","FLED","BROO","TERR")) %>%
+  filter(Species=="SOAL") %>%
+  filter(!Colony %in% c("Seal Beach","Crane Point")) %>%  ## these counts are not needed for this table
+  mutate(month=month(Date)) %>%
+  filter(!(Year==(year(startreportperiod)+1) & month<6)) %>% ## remove the fledgling count from previous season
+  filter(!(Year==year(endreportperiod) & month>6)) %>% ## remove the incubator count from next season
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","EGG","TERR"),"BREED_PAIR","CHIC")) %>%
+  mutate(Cohort=ifelse(Cohort=="CHIC" & month %in% c(12,1),"CHICKhatched",ifelse(Cohort=="CHIC" & month %in% c(3,4,5),"FLEDGLING",ifelse(Cohort=="BREED_PAIR" & month %in% c(12,1),"CHICKhatched",Cohort)))) %>%
+  group_by(Cohort,Colony) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(FLEDGLING=ifelse(is.na(FLEDGLING) & CHICKhatched==0,0,FLEDGLING)) %>%
+  mutate(CHICKhatched=ifelse(is.na(CHICKhatched) & !is.na(FLEDGLING),FLEDGLING,CHICKhatched)) %>%
+  mutate(CHICKhatched=ifelse(FLEDGLING>CHICKhatched,FLEDGLING,CHICKhatched)) %>%
+  mutate(BREED_PAIR=ifelse(!is.na(CHICKhatched) & CHICKhatched>BREED_PAIR,CHICKhatched,BREED_PAIR)) %>%
+  mutate(order=as.numeric(gsub("SOAL Plot ", "", Colony))) %>%
+  arrange(order) %>%
+  select(-order) %>%
+  adorn_totals("row") %>%
+  mutate(hatch.succ=round(((CHICKhatched)/(BREED_PAIR))*100,1), fledg.succ=round(((FLEDGLING)/(CHICKhatched))*100,1), breed.succ=round(((FLEDGLING)/(BREED_PAIR))*100,1)) %>%
+  mutate(fledg.succ=ifelse(fledg.succ>100,100,fledg.succ))
+PAIRS<-sum(SOAL_breed_succ[!is.na(SOAL_breed_succ$FLEDGLING),2])-SOAL_breed_succ[dim(SOAL_breed_succ)[1],2]
+SOAL_breed_succ[dim(SOAL_breed_succ)[1],5]<-round((SOAL_breed_succ[dim(SOAL_breed_succ)[1],3]/PAIRS)*100,1)
+SOAL_breed_succ[dim(SOAL_breed_succ)[1],7]<-round((SOAL_breed_succ[dim(SOAL_breed_succ)[1],4]/PAIRS)*100,1)
+
+options(knitr.kable.NA = '')
+kable(SOAL_breed_succ, caption=sprintf("Table 2.7.1: Abundance and breeding success of Sooty Albatrosses in %i.",year(startreportperiod)+1),col.names=  c("Count area","N of pairs", "N of small chicks","N of fledglings","Hatching success (%)","Fledging success (%)","Breeding success (%)"))
+```
+<br>
+
+Breeding success is also assessed in detail for ~20-60 individual nests along the cliffs from Crane Point to Seal Beach, where individual nests are monitored to completion. This approach offers the most reliable data for long-term comparisons of breeding success. Fig. 2.7.2 shows the trend in Sooty Albatross breeding success over the past 10 years. Only 3 nests were monitored in 2013, hence no representative estimate of breeding success is available.
+<br>
+
+```{r  SOAL_bs_trend, fig.cap = "Fig. 2.7.2. Breeding success of Sooty Albatrosses on Gough Island over the past 10 years",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+SOAL_succ_trend<-nests %>% 
+  filter(Species=="SOAL") %>%
+  filter(!(LastStage=="INCU" & SUCCESS==1)) %>% ##remove nests not monitored to completion 
+  filter(Year>year(endreportperiod)-11) %>%
+  filter(Year<2022) %>%
+  mutate(count=1) %>%
+  group_by(Year) %>%
+  summarise(ADULT=sum(count),breed.succ=mean(SUCCESS, na.rm=T)) %>%
+  mutate(breed.succ=round(breed.succ*100,1)) %>%
+  filter(ADULT>5)
+
+gg72 <- ggplot(SOAL_succ_trend)+
+  geom_point(aes(x=Year, y=breed.succ),size=2,col="firebrick") +
+  geom_smooth(aes(x=Year, y=breed.succ),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Breeding success (%)", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg72
+```
+<br>
+<br>
+
+## Southern Giant Petrel (*Macronectes giganteus*)
+
+Southern Giant Petrel breeding pairs are counted around the entire island in September during the Tristan Albatross chick count. The number of incubating pairs counted in September is used as an indicator of population size to provide long-term data on abundance trends. Fig. 2.8.1 shows the trend in Southern Giant Petrel abundance over the past 10 years.
+<br>
+
+```{r  SGPE_trend, fig.cap = "Fig. 2.8.1. Number of breeding pairs of Southern Giant Petrels on Gough Island over the past 10 years",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+SGPE_trend<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(endreportperiod)-11) %>%
+  mutate(jday=yday(Date)) %>%
+  filter(jday < yday(ymd("2019-11-15"))) %>%   ### remove all counts of chicks etc. after mid November
+  filter(Species=="SGPE") %>%
+  filter(Breed_Stage=="INCU") %>%
+  filter(Cohort %in% c("TERR","INCU","AON")) %>%   # not include AD as they seem to be duplicates ,"AD"
+  group_by(Year) %>%
+  summarise(n_birds=sum(Number))
+
+gg81 <- ggplot(SGPE_trend)+
+  geom_point(aes(x=Year, y=n_birds),size=2,col="firebrick") +
+  geom_smooth(aes(x=Year, y=n_birds),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Number of breeding pairs", limits=c(0,500), breaks=seq(0,500,100)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg81
+```
+<br>
+
+Breeding success is intensively monitored at the Low Hump colony by marking all nests during incubation (September), and following these nests by regular visits until fledging (January). Since 2020, only nests in the main parts of the Low Hump colony are monitored. Hatching success is the proportion of nests that hatched a chick, fledging success is the proportion of hatched chicks that fledged, and breeding success is the proportion of nests that fledged a chick. Breeding population size and breeding success for `r year(startreportperiod)+1` are presented in Table 2.8.1 below.  
+
+```{r  SGPE_count, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+SGPE_success<-nests %>% 
+  filter(Species=="SGPE") %>%
+  #filter(!(LastStage=="INCU" & SUCCESS==1)) %>% ##remove nests not monitored to completion 
+  filter(Year==year(startreportperiod)+1) %>%
+  mutate(hatched = ifelse(LastStage %in% c("CHIC","FLED"),1,ifelse(SUCCESS==1,1,0))) %>%
+  mutate(count=1) %>%
+  group_by(Colony) %>%
+  summarise(hatch.succ=mean(hatched,na.rm=T),fledg.succ=sum(SUCCESS,na.rm=T)/sum(hatched,na.rm=T),breed.succ=mean(SUCCESS, na.rm=T)) %>%
+  mutate(hatch.succ=round(hatch.succ*100,1), fledg.succ=round(fledg.succ*100,1), breed.succ=round(breed.succ*100,1))
+
+
+SGPE_count<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year==year(startreportperiod)+1) %>%
+  filter(Species=="SGPE") %>%
+  filter(Breed_Stage=="INCU") %>%
+  filter(Cohort %in% c("TERR","INCU","AON")) %>%   # not include AD as they seem to be duplicates ,"AD"
+  group_by(Colony) %>%
+  summarise(n_birds=sum(Number)) %>%
+  left_join(SGPE_success, by="Colony")
+
+options(knitr.kable.NA = '')
+kable(SGPE_count, caption=sprintf("Table 2.8.1: Abundance and breeding success of Southern Giant Petrels in %i.",year(startreportperiod)+1),col.names=  c("Count area","N of pairs", "Hatching success (%)","Fledging success (%)","Breeding success (%)"))
+```
+<br>
+
+The nest monitoring data from Low Hump also allow long-term comparisons of breeding success. Fig. 2.8.2 shows the trend in Southern Giant Petrel breeding success over the past 10 years.
+<br>
+
+```{r  SGPE_bs_trend, fig.cap = "Fig. 8.2. Breeding success of Southern Giant Petrels on Gough Island over the past 10 years",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+SGPE_succ_trend<-nests %>% 
+  filter(Species=="SGPE") %>%
+  filter(!(LastStage=="INCU" & SUCCESS==1)) %>% ##remove nests not monitored to completion 
+  filter(Year>year(endreportperiod)-11) %>%
+    filter(Year<year(endreportperiod)) %>%
+  mutate(count=1) %>%
+  group_by(Year) %>%
+  summarise(ADULT=sum(count),breed.succ=mean(SUCCESS, na.rm=T)) %>%
+  mutate(breed.succ=round(breed.succ*100,1)) %>%
+  filter(ADULT>5)
+
+gg82 <- ggplot(SGPE_succ_trend)+
+  geom_point(aes(x=Year, y=breed.succ),size=2,col="firebrick") +
+  geom_smooth(aes(x=Year, y=breed.succ),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Breeding success (%)", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg82
+```
+<br>
+<br>
+
+## Tristan Albatross (*Diomedea dabbenena*)
+
+Tristan Albatross breeding pairs are counted around the entire island in late January and early February during incubation. The number of incubating pairs can vary from year to year depending on the breeding success of the previous year, because adult birds that raised a chick in the previous year will not return to Gough in the current year. The count of incubators is used as an indicator of population size to provide long-term data on abundance trends. Fig. 2.9.1 shows the trend in Tristan Albatross abundance over the past 15 years.
+<br>
+
+
+```{r  TRAL_trend, fig.cap = "Fig. 2.9.1. Number of breeding pairs of Tristan Albatross on Gough Island over the past 15 years",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+TRAL_trend<-seabirdcounts %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(endreportperiod)-15) %>%
+  mutate(jday=yday(Date)) %>%
+  filter(jday < yday(ymd("2019-05-15"))) %>%   ### remove all counts of chicks etc. after May
+  filter(Species=="TRAL") %>%
+  filter(Breed_Stage=="INCU") %>%
+  filter(Cohort %in% c("TERR","INCU","AON")) %>%   # not include AD as they seem to be duplicates ,"AD"
+  group_by(Year) %>%
+  summarise(n_birds=sum(Number)) %>%
+  filter(!(Year %in% c(2002,2003,2011)))
+
+gg91 <- ggplot(TRAL_trend)+
+  geom_point(aes(x=Year, y=n_birds),size=2,col="firebrick") +
+  geom_smooth(aes(x=Year, y=n_birds),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Number of breeding pairs", limits=c(0,2500), breaks=seq(0,2500,500)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-15,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y=element_text(size=16, color="black"),         axis.text.x=element_text(size=14, color="black"),
+        axis.title=element_text(size=16), 
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg91
+```
+<br>
+
+Breeding success is coarsely assessed for all 11 census areas by counting incubating pairs in late January and large chicks in September. Assuming that all large chicks counted in September survive to fledging, breeding success is calculated for each census area by dividing the number of large chicks by the number of incubating pairs in that area and year. Breeding population size and breeding success for `r year(startreportperiod)+1` are presented in Table 2.9.1 below. Note that the breeding success reported here refers to the 2021 breeding season which started *before* the mouse eradication operation.
+
+```{r  TRAL_breed_succ, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+TRAL_breed_succ<-seabirdcounts %>%
+  filter(Species=="TRAL") %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year==(year(startreportperiod)+1)) %>%
+  filter(Cohort %in% c("INCU","AON","CHIC","TERR")) %>%
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","TERR"),"ADULT","CHICK")) %>%
+  group_by(Cohort,Colony) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(breed.succ=round(((CHICK)/(ADULT))*100,1)) %>%
+  arrange(breed.succ) %>%
+  adorn_totals("row") %>%
+  mutate(breed.succ=round(((CHICK)/(ADULT))*100,1)) 
+
+options(knitr.kable.NA = '')
+kable(TRAL_breed_succ, caption=sprintf("Table 2.9.1: Abundance and breeding success of Tristan Albatross in %i. Count areas are sorted by breeding success.",year(startreportperiod)+1),col.names=  c("Count area","N of pairs", "N of large chicks (Sept)","Breeding success (%)"))
+```
+<br>
+
+Breeding success is also intensively monitored in Gonydale, Tafelkop and the Hummocks by marking all nests during incubation (January), and following these nests by regular visits until fledging (November/December). Although these data come from an area of the island where breeding success is generally higher, they allow a more consistent measurement of breeding success that is less influenced by weather and the timing and completeness of chick counts than the complete island counts in January and September. Fig. 2.9.2. shows the breeding success from both monitoring series for the past 10 years.
+<br>
+
+```{r  TRAL_succ_trend, fig.cap = "Fig. 2.9.2. Breeding success of Tristan Albatrosses on Gough Island over the past 10 years based on counts of incubating pairs and large chicks around the island (left panel), and nest monitoring at Gonydale, Tafelkop and the Hummocks (right panel). Size of points reflects sample size (=number of incubating pairs).",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 10, fig.height = 6}
+TRAL_breed_succ_trend<-seabirdcounts %>%
+  filter(Species=="TRAL") %>%
+  mutate(Year=year(Date)) %>%
+  filter(Year>year(endreportperiod)-11) %>%
+  filter(Cohort %in% c("INCU","AON","CHIC","TERR")) %>%
+  mutate(Cohort=ifelse(Cohort %in% c("INCU","AON","TERR"),"ADULT","CHICK")) %>%
+  group_by(Year,Cohort,Colony) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(DELETE=ifelse(is.na(CHICK/ADULT),1,0)) %>%
+  filter(!DELETE==1) %>%
+  ungroup() %>%
+  select(-DELETE) %>%
+  gather(key="Cohort",value="Number",-Year,-Colony) %>%
+  group_by(Year,Cohort) %>%
+  summarise(n_birds=sum(Number)) %>%
+  spread(key=Cohort,value=n_birds) %>%
+  mutate(breed.succ=round(((CHICK)/(ADULT))*100,1)) %>%
+  select(-CHICK) %>%
+  mutate(DATA="all-island counts")
+
+
+
+TRAL_succ_trend<-nests %>% 
+  filter(Species=="TRAL") %>%
+  filter(!(LastStage=="INCU" & SUCCESS==1)) %>% ##remove nests not monitored to completion 
+  filter(Year>year(endreportperiod)-11) %>%
+  filter(Year<year(endreportperiod)) %>%
+  mutate(count=1) %>%
+  group_by(Year) %>%
+  summarise(ADULT=sum(count),breed.succ=mean(SUCCESS, na.rm=T)) %>%
+  mutate(breed.succ=round(breed.succ*100,1))%>%
+  mutate(DATA="nest monitoring") %>%
+  bind_rows(TRAL_breed_succ_trend)
+
+gg92 <- ggplot(TRAL_succ_trend)+
+  geom_point(aes(x=Year, y=breed.succ,size=log(ADULT)),col="firebrick") +
+  geom_smooth(aes(x=Year, y=breed.succ),method="lm") +
+  facet_wrap(~DATA, ncol=2) + 
+  
+  ## format axis ticks
+  scale_y_continuous(name="Breeding success (%)", limits=c(0,100), breaks=seq(0,100,20)) +
+  scale_x_continuous(name="Year", breaks=seq(year(endreportperiod)-11,year(endreportperiod),1)) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.y=element_text(size=16, color="black"),
+        axis.text.x=element_text(size=13, color="black", angle=45,hjust = 1),
+        axis.title=element_text(size=16), 
+        strip.text=element_text(size=16, color="black"),
+        legend.title = element_blank(),
+        legend.position = "none",
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg92
+```
+<br>
+<br>
+
+
+## Tristan Skua (*Stercorarius antarcticus hamiltoni*)
+
+Tristan Skuas have not been the focus of long-term monitoring efforts. However, in anticipation of potential impacts from secondary poisoning during the mouse eradication, regular counts of skua clubs are conducted several times per month to document the abundance of non-breeders, who may be affected by the eradication.
+<br>
+The highest counts of non-breeders on the island are usually recorded between October and February (during summer). Summing the average counts for each club across the island, we can inspect the long-term change of the non-breeding skuas in summer. Fig. 2.10.1. shows the trend of the summer non-breeding skua population at the three counted clubs since 2016. Note that a distinct skua club in the Hummocks disappeared in August 2020, but overall there was no significant decrease after the eradication operation.
+<br>
+
+
+```{r  SKUA_trend, fig.cap = "Fig. 2.10.1. Average number of non-breeding Tristan Skuas at four clubs on Gough Island since summer 2016. Points present average total number for Nov, Dec, and Jan.",echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 9, fig.height = 6}
+skua_trend <- seabirdcounts %>%
+  filter(Species=='SKUA') %>%
+  filter(Colony %in% c("Gonydale","Helipad","Hummocks","Gonydale Path")) %>%
+  mutate(Year=year(Date), Month=month(Date)) %>% select(Colony, Year, Month, Breed_Stage,Number) %>%
+  group_by(Colony, Year, Month) %>%
+  summarise(mean=mean(Number)) %>%
+  ungroup() %>% filter(Month %in% c(11,12,1)) %>%
+  mutate(Date=ymd(paste(Year,Month, "01",sep="-"))) %>%
+  filter(Date<ymd("2022-10-01")) %>%
+  group_by(Date, Year, Month) %>%
+  summarise(N=sum(mean),lcl=sum(mean,na.rm=T)-0.5*sd(mean,na.rm=T),ucl=sum(mean,na.rm=T)+0.5*sd(mean,na.rm=T)) %>%
+  mutate(lcl=if_else(lcl<0,0,lcl)) %>%
+  mutate(Month=month.name[Month])
+  
+break.vec <- skua_trend$Date[skua_trend$Month=="December"]
+skua_trend$Month <- factor(skua_trend$Month, levels=c("November","December","January"))
+
+gg101<-ggplot(skua_trend, aes(x=Date, y=N))+
+  geom_point(aes(col=Month),size=2) +
+  geom_errorbar(aes(x=Date, ymin=lcl, ymax=ucl,col=Month), width=.1)+
+  geom_smooth(aes(x=Date, y=N),method="lm") +
+  
+  ## format axis ticks
+  scale_y_continuous(name="Monthly average number of Skuas", limits=c(0,250), breaks=seq(0,250,25), labels=seq(0,250,25))+
+  scale_x_date(name="", breaks=break.vec, labels=paste("Summer",year(break.vec)))+
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.y=element_text(size=16, color="black"),
+        axis.text.x=element_text(size=13, color="black", angle=45,hjust = 1),
+        # legend.title=element_blank(),
+        # legend.text=element_blank(),
+        # legend.position="none",
+        legend.title=element_text(size=14),
+        legend.text=element_text(size=12),
+        legend.background=element_blank(),
+        legend.key=element_blank(),
+        legend.position=c(0.12, 0.15),
+        axis.title=element_text(size=16), 
+        strip.text.x=element_text(size=16, color="black"),
+        strip.text.y=element_text(size=16, color="black"),
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+gg101
+```
+<br>
+<br>
+
+
+# Appendix: list of all deployed rings
+
+The table Appendix 1 lists all rings (metal and darvic) that were deployed between `r format(endreportperiod-years(1),'%d %B %Y')` and `r format(endreportperiod,'%d %B %Y')`. This table includes rings that were deployed on previously unringed birds (see Table 1.3.1), and on recaptured birds that had previously been ringed, but required a replacement or additional ring to ensure future identification. All ringing and resighting data were submitted to the BTO in `r format(BTOsubmitdate, format="%B %Y")` and to SAFRING in `r format(SAFRINGsubmitdate, format="%B %Y")`, but are here provided for easy reference. Note that this table does not include the birds held in captivity during the mouse eradication operation.
+
+
+```{r  RING_appendix, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+RingDeployAppendix<-ringdeployments %>%
+  filter(Mark_Type %in% c('Federal',"Plastic FR"))  %>%
+  mutate(Mark_Type=ifelse(Mark_Type=="Plastic FR","darvic","metal")) %>%
+  filter(Date_Time> (endreportperiod-years(1)))  %>%
+  mutate(Speciesname=species$Species[match(SpeciesCode,species$SpeciesCode)]) %>%
+  select(Speciesname,Age,Mark_Type,Band_Color,Band_Size,Band_Number) %>%
+  arrange(Speciesname,Mark_Type,Band_Number)
+
+options(knitr.kable.NA = '')
+kable(RingDeployAppendix, caption=sprintf("Appendix 1: Details of all ring deployments on Gough Island in %i. Note that this table includes ring replacements of previously ringed birds.",year(startreportperiod)+1),col.names=  c("Species","Age of bird", "Ring type","Ring colour","Ring size (mm)","Ring number"))
+```
+<br>
+
+
+<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>
+
