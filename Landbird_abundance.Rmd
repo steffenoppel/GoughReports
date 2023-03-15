@@ -1,0 +1,122 @@
+---
+title: "Abundance estimate for the endemic landbirds on Gough Island"
+author: "Gough Island RSPB team"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning=FALSE,error=FALSE,message=FALSE)
+```
+
+
+## Why monitor landbirds on Gough Island?
+
+Gough Island hosts two endemic landbirds, the Gough Moorhen and the Gough Bunting. During the mouse eradication there is the risk of significant mortality of these two species. Captive populations of these two species will be kept safe from consuming rodenticide pellets, and should be able to repopulate the island in the worst-case scenario that mortality of wild individuals approaches 100%.However, to quantify the magnitude of mortality and assess the ultimate recovery of the population, robust indices of abundance are required.
+
+Since 2016, buntings and moorhens are regularly counted along 50 random transects that are located around the island. The transects are located in both the lowland fern bush and phylica habitats (n = `r length(trans$Habitat[trans$Habitat=='lowland'])`) as well as in the upland wet heath and moorland habitats (n = `r length(trans$Habitat[trans$Habitat=='upland'])`). During the round-island albatross counts in February and September, each transect is surveyed independently three times, and the abundance of buntings and moorhens is estimated using binomial mixture models.
+<br>
+<br>
+
+## Landbird survey in September 2018
+
+We conducted transect surveys of moorhens and buntings between `r format(min(input$Date),format="%d %b")` and  `r format(max(input$Date),format="%d %b")` and completed a total of `r length(input$time)` independent surveys. Rain and inclement weather prevented further independent surveys. 
+<br>
+
+
+
+### Estimate of Gough Moorhen abundance
+
+We counted between 0 and `r max(GOMO_y, na.rm=T)` moorhens per transect, with an average of `r round(mean(GOMO_y[,1], na.rm=T),1)` birds that were mostly heard. The total number of moorhens counted on the `r length(sitecovs$Transect)` transects was `r sum(GOMO_y[,1], na.rm=T)` birds.
+
+<br>
+
+The binomial mixture models indicated a strong difference in abundance between lowland transects (mean abundance = `r round(GOMORESULT$Predicted[GOMORESULT$Habitat=='lowland'][1],2)`, 95% CI = `r round(GOMORESULT$lower[GOMORESULT$Habitat=='lowland'][1],2)` - `r round(GOMORESULT$upper[GOMORESULT$Habitat=='lowland'][1],2)` birds/100 m transect) and upland transects (mean abundance = `r round(GOMORESULT$Predicted[GOMORESULT$Habitat=='upland'][1],2)`, 95% CI = `r round(GOMORESULT$lower[GOMORESULT$Habitat=='upland'][1],2)` - `r round(GOMORESULT$upper[GOMORESULT$Habitat=='upland'][1],2)` birds/100 m transect, Fig. 1).
+
+
+```{r, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.height = 6, fig.width = 8, fig.align = "center"}
+gg <- ggplot(GOMORESULT, aes(x=Habitat, y=Predicted)) + 
+  geom_point(size=2) +
+  geom_errorbar(aes(ymin=lower, ymax=upper), width=.1) +
+  xlab("") +
+  ylab("Gough Moorhens / 100 m transect)") +
+  ylim(0,15) +
+  theme(panel.background=element_rect(fill="white", colour="black"), 
+        axis.text=element_text(size=16, color="black"), 
+        axis.title=element_text(size=20), 
+        strip.text.x=element_text(size=16, color="black"), 
+        strip.background=element_rect(fill="white", colour="black"), 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.border = element_blank())
+gg
+```
+<br>
+<br>
+
+We assumed that a transect recorded birds from an area up to 300m on either side of the transect and converted abundance estimates into densities based on this assumption. We then extrapolated these densities across the island by assuming that suitable upland habitat covered ~400 ha of the island, and suitable lowland habitat ~3000 ha. The population size of Gough Moorhen in September 2018 was therefore crudely extrapolated as `r sum(GOMOsummary[,2])` individuals (95% CI = `r sum(GOMOsummary[,3])` - `r sum(GOMOsummary[,4])` birds).
+<br>
+
+```{r  GOMOsummary, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+kable(GOMOsummary, caption="Estimated abundance of Gough Moorhen based on transect surveys and extrapolation of density across suitable habitat.",col.names=  c("Habitat","N moorhens", "95% lower conf. limit", "95% upper conf. limit"))
+```
+
+
+<br>
+<br>
+
+
+### Estimate of Gough Bunting abundance on Gough Island
+
+We counted between 0 and `r max(GOBU_y, na.rm=T)` buntings per transect, with an average of `r round(mean(GOBU_y[,1], na.rm=T),1)` birds per transect. The total number of buntings counted on the `r length(sitecovs$Transect)` transects was `r sum(GOBU_y[,1], na.rm=T)` birds.
+
+<br>
+
+The hierarchical distance sampling models indicated a strong difference in density between lowland transects (mean density = `r round(GOBURESULT$Predicted[GOBURESULT$Habitat=='lowland'][1],2)`, 95% CI = `r round(GOBURESULT$lower[GOBURESULT$Habitat=='lowland'][1],2)` - `r round(GOBURESULT$upper[GOBURESULT$Habitat=='lowland'][1],2)` birds/ha) and upland transects (mean density = `r round(GOBURESULT$Predicted[GOBURESULT$Habitat=='upland'][1],2)`, 95% CI = `r round(GOBURESULT$lower[GOBURESULT$Habitat=='upland'][1],2)` - `r round(GOBURESULT$upper[GOBURESULT$Habitat=='upland'][1],2)` birds/ha, Fig. 1).
+
+
+```{r, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.height = 6, fig.width = 8, fig.align = "center"}
+gg <- ggplot(GOBURESULT, aes(x=Habitat, y=Predicted)) + 
+  geom_point(size=2) +
+  geom_errorbar(aes(ymin=lower, ymax=upper), width=.1) +
+  xlab("Habitat type") +
+  ylab("Gough bunting density (birds/ha)") +
+  ylim(0,3) +
+  theme(panel.background=element_rect(fill="white", colour="black"), 
+        axis.text=element_text(size=16, color="black"), 
+        axis.title=element_text(size=20), 
+        strip.text.x=element_text(size=16, color="black"), 
+        strip.background=element_rect(fill="white", colour="black"), 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.border = element_blank())
+gg
+```
+<br>
+<br>
+
+We assumed that upland habitat covered ~800 ha of the island, and lowland habitat ~3000 ha, and extrapolated the estimated densities across the island to estimate that the population size of Gough Bunting in September 2018 was `r sum(GOBUsummary[,2])` individuals (95% CI = `r sum(GOBUsummary[,3])` - `r sum(GOBUsummary[,4])` birds).
+
+<br>
+
+```{r  GOBUsummary, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+kable(GOBUsummary, caption="Estimated abundance of Gough Bunting based on transect surveys and extrapolation of density across suitable habitat",col.names=  c("Habitat","N buntings", "95% lower conf. limit", "95% upper conf. limit"))
+```
+
+
+
+<br>
+<br>
+
+
+## Assumptions and caveats
+
+The numbers presented above rely on several critical assumptions that have major repercussions for the presented numbers. For Gough Moorhen, the models estimate the abundance of a superpopulation per transect, for which the area is unknown. Converting this estimate of abundance to a density that can be extrapolated across the island requires an untested assumption of home range size, and we caution that our estimate of Gough Moorhen population size is extremely dependent on the area that is assumed around each transect.
+
+<br>
+
+The second critical assumption is the size of suitable habitat around the island, and that all habitat is populated in equal density by both bird species. Total abundance may be significantly higher or lower than presented here if habitat around the island is more or less widespread than assumed in the calculations.
+
+<br>
+<br>
+
+

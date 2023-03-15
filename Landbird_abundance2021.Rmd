@@ -1,0 +1,91 @@
+---
+title: "Abundance estimate for the endemic landbirds on Gough Island"
+author: "RSPB Gough Island Team"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning=FALSE,error=FALSE,message=FALSE)
+```
+
+
+## Why monitor landbirds on Gough Island?
+
+Gough Island hosts two endemic landbirds, the Gough Moorhen and the Gough Bunting. During the mouse eradication there is the risk of significant mortality of these two species. Captive populations of these two species will be kept safe from consuming rodenticide pellets, and should be able to repopulate the island in the worst-case scenario that mortality of wild individuals approaches 100%. However, to quantify the magnitude of mortality and assess the ultimate recovery of the population, robust indices of abundance are required.
+
+Since 2018, buntings and moorhens are regularly counted along 50 random transects that are located around the island. The transects are located in both the lowland fern bush and phylica habitats (n = `r length(trans$Habitat_description[trans$Biome=='lowland'])`) as well as in the upland wet heath and moorland habitats (n = `r length(trans$Habitat_description[trans$Biome=='upland'])`). During the round-island albatross counts in February and September, each transect is surveyed independently three times, and the density of buntings and abundance of moorhens is estimated using appropriate statistical models that account for detection probability.
+<br>
+<br>
+
+## Update of monitoring until February 2021
+
+We conducted transect surveys of moorhens and buntings between `r format(cutoff,format="%d %b %Y")` and  `r format(max(surv$Date),format="%d %b %Y")` and completed a total of `r length(input$time)` independent surveys. Rain and inclement weather prevented further independent surveys. 
+
+These data provide a robust baseline against which surveys immediately before and after the mouse eradication in 2021 can be compared:
+
+* in late May 2021 a count will be conducted to assess baseline abundance *after* all required birds have been secured in the facility
+* in September 2021 a count will be conducted to assess mortality loss *during* the eradication (compared against May baseline)
+<br>
+<br>
+
+
+### Estimate of Gough Moorhen abundance
+
+We counted between 0 and `r max(GOMO_y, na.rm=T)` moorhens per transect, with an average of `r round(mean(GOMO_y[,1], na.rm=T),1)` birds that were mostly heard. The total number of moorhens counted on the `r length(sitecovs$Transect)` surveys was `r sum(GOMO_y[,1], na.rm=T)` birds.
+
+The binomial mixture models indicated a strong difference in abundance between habitat types, but so far no significant difference between the three years of monitoring (2018-2020; Fig. 1).
+
+
+```{r, echo=FALSE,fig.cap = "Fig. 1. Abundance of Gough Moorhens (in birds/100 m transect) in four habitat types on Gough Island between 2018 and 2020 estimated from surveys along 50 transects.", warning=FALSE,error=FALSE,message=FALSE, fig.height = 8, fig.width = 9, fig.align = "center"}
+gg <- ggplot(GOMOsummary,
+       aes(x=Summer, y=Abundance)) +
+  facet_wrap(~Habitat_description, ncol=2) +
+  geom_point(size=2) +
+  geom_errorbar(aes(ymin=lcl, ymax=ucl), width=.1) +
+  scale_x_continuous(name="Year", limits=c(2017.5,2020.5), breaks=c(2018,2019,2020)) +
+  ylab("Number of Gough Moorhens (birds / 100m)") +
+  ylim(0,15) +
+  theme(panel.background=element_rect(fill="white", colour="black"), 
+        axis.text=element_text(size=16, color="black"), 
+        axis.title=element_text(size=20), 
+        strip.text.x=element_text(size=16, color="black"), 
+        strip.background=element_rect(fill="white", colour="black"), 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.border = element_blank())
+gg
+```
+<br>
+<br>
+
+
+### Estimate of Gough Bunting density
+
+We counted between 0 and `r max(GOBU_y, na.rm=T)` buntings per transect, with an average of `r round(mean(GOBU_y[,1], na.rm=T),1)` birds per transect. The total number of buntings counted on the `r length(sitecovs$Transect)` surveys was `r sum(GOBU_y[,1], na.rm=T)` birds.
+
+Hierarchical distance sampling models indicated a strong difference in density between habitat types, and a slightly declining trend across the three years (2018-2020; Fig. 2). However, this trend is very small compared to the uncertainty within each year, and thus not significant.
+
+
+```{r, echo=FALSE,fig.cap = "Fig. 2. Density of Gough Buntings (in birds/sqkm) in four habitat types on Gough Island between 2018 and 2020 estimated from surveys along 50 transects.", warning=FALSE,error=FALSE,message=FALSE, fig.height = 8, fig.width = 9, fig.align = "center"}
+gg <- ggplot(GOBUsummary,
+       aes(x=Summer, y=Density)) +
+  facet_wrap(~Habitat_description, ncol=2, scales="free_y") +
+  geom_point(size=2) +
+  geom_errorbar(aes(ymin=lcl, ymax=ucl), width=.1) +
+  scale_x_continuous(name="Year", limits=c(2017.5,2020.5), breaks=c(2018,2019,2020)) +
+  ylab("Density of Gough buntings (birds / sqkm)") +
+  #ylim(0,250) +
+  theme(panel.background=element_rect(fill="white", colour="black"), 
+        axis.text=element_text(size=16, color="black"), 
+        axis.title=element_text(size=20), 
+        strip.text.x=element_text(size=16, color="black"), 
+        strip.background=element_rect(fill="white", colour="black"), 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.border = element_blank())
+gg
+```
+<br>
+<br>
+

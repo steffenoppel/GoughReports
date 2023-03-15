@@ -1,0 +1,79 @@
+---
+title: "Prion timeline"
+author: "Jaimie Cleeland jaimie.cleeland@utas.edu.au"
+date: "31/01/2018"
+output: html_document
+---
+
+```{r}
+rm(list=ls())
+df <- read.csv(file="/Users/jaimiec/Documents/Employment/Gough Island/Prions/Prions 2017-18.csv", header = T, stringsAsFactors = F)
+df$Lay_date <- as.Date(df$Lay_date, format="%d/%m/%y")
+df$Hatch_date <- as.Date(df$Hatch_date, format="%d/%m/%y")
+df$Fail_date <- as.Date(df$Fail_date, format="%d/%m/%y")
+# df$Nest_number <- as.factor(df$Nest_number)
+
+
+df$start <- df$Lay_date # all nests
+
+df$end <- as.Date("1900-01-01")
+df$end[is.na(df$Hatch_date)] <- df$Fail_date[is.na(df$Hatch_date)] #failed eggs
+
+df$end[!is.na(df$Hatch_date)] <- df$Hatch_date[!is.na(df$Hatch_date)] - 1 #hatching
+
+df$stage <- "incubation"
+
+temp <- df[!is.na(df$Hatch_date),]
+temp$start <- temp$Hatch_date
+temp$end <- temp$Fail_date
+temp$stage <- "chick-rearing"
+
+df <- rbind(df, temp)
+
+ex <- data.frame(Nest_ID=c("Expected","Expected"), Nest_number=c("",""), Egg=c(1,1), Hatched=c(1,1), Fledged=c(1,1), Lay_date=c(NA, NA), Hatch_date=c(NA, NA), Fail_date=c(NA, NA), start=as.Date(c("2017-11-24", "2018-01-14")), end=as.Date(c("2018-01-13", "2018-03-16")), stage=c("fincubation", "fchick-rearing"))
+
+df <- rbind(df, ex)
+
+df$Nest_number <- factor(x=df$Nest_number, levels=c("", as.character(1:68)))
+
+```
+
+```{r}
+aqua <- "#00CDCD"
+peach <- "#EE6363"
+purple <- "#7570B3"
+
+cols <- c(aqua, peach, purple, alpha(aqua, 0.4), alpha(peach, 0.4)) 
+```
+
+```{r}
+a <-  ggplot(df, aes()) + 
+  geom_segment(aes(x=as.Date(start), xend=as.Date(end), y=Nest_number, yend=Nest_number, colour=factor(stage)), size=4) +
+  xlab("Date") +
+  ylab("Nest") +
+  xlim(c(min(df$Lay_date), max(df$Fail_date, na.rm=T)+47)) +
+  geom_vline(xintercept=as.numeric(max(df$Fail_date, na.rm=T)+47), linetype="solid", size=3, colour="#7570B3") +
+  scale_y_discrete(limits = rev(levels(df$Nest_number))) +
+  scale_color_manual(values = cols[c(2,5,4,1)]) +
+  theme(axis.line.x=element_line(colour="#666666", size = 0.1),
+        axis.line.y=element_line(colour="#666666", size = 0.1),
+        axis.text.x=element_text(colour="#666666", size=14), 
+        axis.text.y=element_text(colour="#666666", size=10),
+        axis.title.x=element_text(colour="black", size=18), 
+        axis.title.y=element_text(colour="black", size=18),
+        plot.background=element_rect(colour="transparent", fill="NA"),
+        legend.key=element_blank(),
+        legend.position="none",
+        panel.grid.major.x=element_line(size=0.2, color="black", linetype="dotted"),
+        panel.grid.minor.x=element_line(size=0.2, color="black", linetype="dotted"),
+        # panel.background=element_blank(),
+        text=element_text(colour="#666666", size=12))#
+a
+ggsave(filename="/Users/jaimiec/Documents/Employment/Gough Island/Prions/PrionBreedingSuccess.png", plot=a, dpi = 300, width = 21, height = 29.7 ,units = "cm")
+
+
+# col2rgb(colours()[374])
+# rgb(238,99,99, maxColorValue = 255)
+
+
+```

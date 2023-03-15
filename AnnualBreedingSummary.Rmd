@@ -1,0 +1,69 @@
+---
+title: "Annual summary of Tristan Albatross breeding success"
+author: "RSPB Gough67 Team"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning=FALSE,error=FALSE,message=FALSE)
+```
+
+
+
+## Count of adult birds / active nests
+
+We conducted the round the island count of incubating adults between `r format(min(inccount$Date),format="%d %b")` and  `r format(max(inccount$Date),format="%d %b")` and counted a total of `r sum(inccount$Number)` nests in the `r length(unique(inccount$Colony))` survey areas.
+<br>
+
+
+## Count of large chicks
+
+We conducted the round the island count of large chicks between `r format(min(chickcount$Date),format="%d %b")` and  `r format(max(chickcount$Date),format="%d %b")` and counted a total of `r sum(chickcount$Number)` chicks in the `r length(unique(chickcount$Colony))` survey areas.
+<br>
+
+
+## Overall breeding success
+
+The overall breeding success in `r year(today)` was `r round((sum(chickcount$Number)/sum(inccount$Number))*100,1)`% with breeding success in the individual study areas ranging from `r round(min(summary$Success),1)`%  to `r round(max(summary$Success),1)`% (Table 1).
+
+```{r  SUMMARY, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+kable(summary, caption="Summary of Tristan Albatross counted in survey areas on Gough Island",col.names=  c("Area","N nests", "N large chicks", "Breeding success (%)"))
+```
+<br>
+<br>
+
+## Long-term trend in breeding success
+
+The overall breeding success in `r year(today)` was slightly higher than the long-term average breeding success of `r round(median(plotdat$BS, na.rm=T),1)`% (Fig. 1).
+
+```{r  tral_trend, fig.cap = "Fig. 1. Breeding success of Tristan Albatross on Gough Island over the past 10 years based on counts of adults and chicks in 12 study areas. Blue line shows the average trend of observed breeding success until 2020. Dashed horizontal line is the average breeding success for large albatrosses on predator-free islands.",fig.width=9, fig.height=6,echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+
+tralplot<-ggplot(data=plotdat[plotdat$Year<2021,],aes(x=Year, y=BS))+
+  geom_point(size=2,col='darkblue')+
+  geom_smooth(method='lm',fill="lightblue", size=1.5)+
+  geom_hline(aes(yintercept = 63), colour="darkred", linetype = "dashed", size=2) +  ### mean breeding success taken from Caravaggi et al. 2018
+  geom_point(data=plotdat[plotdat$Year==2021,], aes(x=Year, y=BS),size=3.5,col='red')+     ### highlight the 2021 breeding success
+    
+  ## format axis ticks
+  scale_y_continuous(name="Breeding Success (%)", limits=c(0,100), breaks=seq(0,100,20), labels=seq(0,100,20))+
+  scale_x_continuous(limits=c(2004,2021), breaks=seq(2004,2021,1))+
+  
+  ### add the bird icons
+  annotation_custom(TRALicon, xmin=2017.5, xmax=2021, ymin=70, ymax=100) +
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.y=element_text(size=18, color="black"),
+        axis.text.x=element_text(size=16, color="black", angle=45,hjust = 1), 
+        axis.title=element_text(size=18), 
+        strip.text.x=element_text(size=18, color="black"),
+        strip.text.y=element_text(size=18, color="black"),
+        axis.title.y=element_text(margin=margin(0,20,0,0)), 
+        strip.background=element_rect(fill="white", colour="black"))
+tralplot
+```
+<br>
+<br>
+<br>
+
