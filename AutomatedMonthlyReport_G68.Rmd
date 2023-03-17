@@ -8,11 +8,11 @@ output:
 ---
 
 ```{r  dataload, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
-MYREPORTDRIVE<-"C:\\STEFFEN\\OneDrive - THE ROYAL SOCIETY FOR THE PROTECTION OF BIRDS\\STEFFEN\\RSPB\\UKOT\\Gough\\Reports\\ScriptedReports\\MonthlyReport"
+#MYREPORTDRIVE<-"C:\\STEFFEN\\OneDrive - THE ROYAL SOCIETY FOR THE PROTECTION OF BIRDS\\STEFFEN\\RSPB\\UKOT\\Gough\\Reports\\ScriptedReports\\MonthlyReport"
 #MYREPORTDRIVE<-"S:\\ConSci\\DptShare\\SteffenOppel\\RSPB\\UKOT\\Gough\\Reports\\ScriptedReports\\MonthlyReport"
 #MYREPORTDRIVE<-"C:\\Users\\Gough Conservation\\Documents\\Gough Birders\\2022-2023\\12.Monthly reports 2022-23"
 
-setwd(MYREPORTDRIVE)
+try(setwd(MYREPORTDRIVE), silent=T)
 load("MONTHLY_REPORT_DATA.RData")
 library(tidyverse)
 library(lubridate)
