@@ -24,7 +24,7 @@ jobs:
           
       - name: Install dependencies
         run: |
-          install.packages(c('ggplot2','rmarkdown','knitr','remotes','tidyverse','data.table','lubridate','maps','ggpubr','ggmap','grid','gtable','magick','tinytex'))
+          install.packages(c('vctrs','ggplot2','rmarkdown','knitr','remotes','tidyverse','data.table','lubridate','maps','ggpubr','ggmap','grid','gtable','magick','tinytex'))
           load("MONTHLY_REPORT_DATA.RData")
 
         shell: Rscript {0}
