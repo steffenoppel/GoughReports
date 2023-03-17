@@ -374,7 +374,7 @@ GOMOall$Longitude<-GOMOall$Longitude+rnorm(length(GOMOall$Latitude),0.0001,0.000
 
 
 GOMOall<-GOMOall %>% mutate(Month=month(Date)) %>% filter(Type!="release") %>% #filter(Month>(month(endreportperiod)-6))
-  filter(Date>endreportperiod-months(6)) %>%
+  filter(Date>=startreportperiod-months(5)) %>%
   filter(Date<endreportperiod) %>%
   mutate(MonthLab=format(Date,format="%b %Y")) 
 
