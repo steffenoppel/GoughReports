@@ -1,0 +1,216 @@
+---
+title: "Monthly report of bird research and conservation activities on Gough Island"
+author: "RSPB Gough 68 Team"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  pdf_document: default
+---
+
+```{r  dataload, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+MYREPORTDRIVE<-"C:\\STEFFEN\\OneDrive - THE ROYAL SOCIETY FOR THE PROTECTION OF BIRDS\\STEFFEN\\RSPB\\UKOT\\Gough\\Reports\\ScriptedReports\\MonthlyReport"
+#MYREPORTDRIVE<-"S:\\ConSci\\DptShare\\SteffenOppel\\RSPB\\UKOT\\Gough\\Reports\\ScriptedReports\\MonthlyReport"
+#MYREPORTDRIVE<-"C:\\Users\\Gough Conservation\\Documents\\Gough Birders\\2022-2023\\12.Monthly reports 2022-23"
+
+setwd(MYREPORTDRIVE)
+load("MONTHLY_REPORT_DATA.RData")
+library(tidyverse)
+library(lubridate)
+library(data.table)
+library(knitr)
+library(rmarkdown)
+filter<-dplyr::filter
+select<-dplyr::select
+require(maps)
+library(ggpubr)
+library(ggmap)
+library(grid)
+library(gtable)
+library(magick)
+```
+
+# Seabird monitoring
+
+## Abundance monitoring
+
+In `r format(startreportperiod,'%B %Y')` we conducted `r sum(count_summary$n_counts)` counts of `r length(unique(count_summary$Species))` seabird species in their respective study areas. For some species different segments of the population were counted (breeders, loafers, non-breeders) and the approximate stage of the nesting cycle was recorded for each count. The details of the number of birds counted per species are provided in Table 1.
+<br>
+
+```{r  count_summary, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+kable(count_summary, caption="Summary of seabird counts on Gough Island",col.names=  c("Species","Group counted", "Stage of nesting cycle","N study areas","N counts", "N individuals"))
+```
+
+<br>
+<br>
+
+## Nest monitoring
+
+In `r format(startreportperiod,'%B %Y')` we monitored the status of `r sum(nest_summary$n_nests)` nests of `r length(unique(nest_summary$Species))` species in their respective study areas. The details of the number of nest visits per species are provided in Table 2.
+<br>
+
+```{r  nest_summary, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+kable(nest_summary, caption="Summary of nest monitoring on Gough Island",col.names=  c("Species","N of nests", "N of nest visits"))
+```
+
+<br>
+<br>
+
+
+## Survival monitoring
+
+In `r format(startreportperiod,'%B %Y')` we observed or recaptured `r sum(CMR_summary$n_individuals)` individually marked birds of `r length(unique(CMR_summary$SpeciesCode))` species in `r sum(CMR_summary$n_sites)` study areas. The details of the number of contacts per species are provided in Table 3. For details of the individual Gough Buntings recorded see Table `r ifelse(dim(death_summary)[1]>0,6,5)` in the section on landbird monitoring below.
+<br>
+
+```{r  CMR_summary, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+kable(CMR_summary, caption="Summary of ringing and resighting on Gough Island",col.names=  c("Species","N of study areas", "N of individuals", "N of contacts"))
+```
+
+<br>
+<br>
+
+
+## Observations of dead birds
+
+
+In `r format(startreportperiod,'%B %Y')` we found carcasses of a total of `r sum(death_summary$n)` birds of `r length(unique(death_summary$Species))` species in `r length(unique(death_summary$Area))` study areas. `r ifelse(dim(death_summary)[1]>0,sprintf("The details of the number of birds counted per species are provided in Table %s.",4),"")`
+
+```{r  death_summary, eval = dim(death_summary)[1]>0, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+kable(death_summary, caption="Summary of carcasses found on Gough Island",col.names=  c("Species","Study area", "Number of carcasses found"))
+```
+
+<br>
+<br>
+<br>
+
+# Landbird monitoring
+
+
+## Overall number of moorhen records
+
+Since February 2022, all moorhen detections (calls heard, individuals seen) have been documented to facilitate an assessment whether moorhen numbers are changing over time or remain constant. Moorhen detections occur either opportunistically in the course of other fieldwork, or during dedicated transects where moorhen calls are first passively recorded and then solicited through the broadcast of moorhen vocalisations on a hand-held speaker system. Since June 2022, several camera traps (n = 8-10) have been used in the lowlands to record moorhens continuously at locations where calls had repeatedly been heard. Because the cameras are more efficient at detecting moorhens, the playback transects were discontinued in October 2022 because they provided disproportionately few records.
+
+The number of opportunistic moorhen records is confounded by effort, which is not accounted for in the summary in Table `r ifelse(dim(death_summary)[1]>0,5,4)` below. In addition, in most cases it is impossible to determine whether separate records reflect the same or different individuals, and no inferences can be drawn as to how many moorhens still persist on Gough Island. The records are nonetheless a useful indication that at least some moorhens are still alive on Gough Island in `r format(Sys.time(), '%B %Y')` 
+<br>
+
+```{r  GOMOsummary, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+#GOMOreportsummary<-GOMOsummary %>% mutate(FortnightStart=format(first,format="%d-%b-%y")) %>%
+#    select(FortnightStart,opportunistic,playback,camera,Total)
+kable(GOMOsummary[,1:6], caption="Total number of moorhen records since January 2022 recorded either opportunistically, during playback transects, or on camera traps. Records are summed over each month.",col.names=c("Month","Year","N opportunistic records","N playback responses", "N camera trap records","Total records"))
+```
+
+<br>
+
+
+```{r  GOMO_plot, fig.cap = sprintf("Total number of Gough moorhen detections until %s, summarised over each month.", format(Sys.time(), '%B %Y')),echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 10, fig.height = 6}
+GOMOplot <-  bind_rows(GOMOopp,GOMOcam,GOMOplay) %>%
+    filter(Date<endreportperiod) %>%
+    mutate(week=isoweek(Date),year=year(Date), month=month(Date)) %>%
+    mutate(first=as.Date(ymd(paste(year,month,"01",sep="-")))) %>%
+    group_by(year,month,first,Type) %>%
+    summarise(N=sum(Number)) %>%
+    spread(key=Type, value=N, fill=0) %>%
+    gather(key="Type",value="N",-year,-month,-first) %>%
+    filter(year>2021) %>%
+    #filter(month>) %>%
+    #filter(month(first)>3) %>%      ## Andrew C wants only last 4 months
+    mutate(first=as.Date(first)) %>% 
+    
+    ### create plot
+    ggplot()+
+    geom_line(aes(x=first, y=N, col=Type), size=1,linetype=2)+
+    geom_line(data=GOMOsummary,aes(x=as.Date(first), y=Total), size=2,linetype=1,col="darkred")+
+    
+    ## format axis ticks
+    scale_y_continuous(name="Total number of moorhen detections", limits=c(0,50),breaks=seq(0,50,10))+
+    scale_x_date(name="",date_breaks="1 month", date_labels="%b")+
+    
+    ### add the gimicky moorhen icon
+    annotation_custom(GOMOicon, xmin=as.Date(ymd("2022-01-01")), xmax=as.Date(ymd("2022-02-01")), ymin=40, ymax=50) +
+    
+    
+    ## beautification of the axes
+    theme(panel.background=element_rect(fill="white", colour="black"), 
+          axis.text=element_text(size=16, color="black"), 
+          axis.title=element_text(size=18), 
+          strip.text=element_text(size=18, color="black"),
+          legend.text=element_text(size=14, color="black"),
+          legend.title=element_text(size=18, color="black"),
+          legend.key=element_blank(),
+          legend.position=c(0.25,0.87),
+          strip.background=element_rect(fill="white", colour="black"), 
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.border = element_blank())
+GOMOplot
+```
+Fig. 1: Total number of Gough moorhen detections `r sprintf("until %s, summarised over each month.", format(Sys.time(), '%B %Y'))`
+<br>
+<br>
+
+
+## Spatial distribution of moorhen records
+
+Prior to June 2021, Gough moorhens were widespread and could be heard everywhere in suitable habitat below 400 m above sea level around the island. Since February 2022, moorhens have only been recorded at isolated locations near areas where captive birds were released. The map below shows the records in space and time since `r ifelse(month(endreportperiod)<7,month.name[12-(6-month(endreportperiod))],month.name[month(endreportperiod)-6])` 2022 - note that these detections are not corrected for effort and more detections can be a result of increased search or recording effort in certain weeks.
+<br>
+
+```{r  GOMO_map, fig.cap = sprintf("Distribution of Gough moorhen detections until %s. Grey squares are weather station and helipad, and locations are randomly scattered by 10 m to avoid overplotting. Yellow diamonds indicate where captive moorhens were released in October 2021 (only 5 of the 6 release locations are visible on this map).", format(Sys.time(), '%B %Y')),echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, fig.width = 12, fig.height = 14}
+GOMOmap <- ggmap(Goughsat) +
+  
+  geom_point(data=BASE, aes(x=Longitude,y=Latitude),col="grey27",size=4,pch=15) +
+  geom_point(data=GOMOrel, aes(x=Longitude,y=Latitude),col="gold",size=4,pch=18) +
+  geom_point(data=GOMOall, aes(x=Longitude,y=Latitude,col=Type),size=3,pch=16) +
+  xlab("Longitude")+
+  ylab("Latitude")+
+  # facet_wrap(~Month, ncol=2, labeller= labeller(Month=c("1"=month.abb[1],"2"=month.abb[2],"3"=month.abb[3],"4"=month.abb[4],"5"=month.abb[5],"6"=month.abb[6],"7"=month.abb[7],"8"=month.abb[8],"9"=month.abb[9],"10"=month.abb[10],"11"=month.abb[11],"12"=month.abb[12]))) +
+      facet_wrap(~MonthLab, ncol=2) +
+    
+  
+  ## beautification of the axes
+  theme(panel.background=element_rect(fill="white", colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text=element_text(size=12, color="black"),
+        plot.title=element_text(size=16, color="black"),
+        axis.title=element_text(size=14), 
+        legend.text=element_text(size=14, color="black"),
+        legend.background=element_blank(),
+        legend.title=element_text(size=18, color="black"),
+        legend.key=element_blank(),
+        legend.position=c(0.38,0.78),
+        strip.text=element_text(size=16, color="black"), 
+        strip.background=element_rect(fill="white", colour="black"))
+GOMOmap
+```
+Fig. 2: Distribution of Gough moorhen detections `r sprintf("until %s. ", format(Sys.time(), '%B %Y'))`Grey squares are weather station and helipad, and locations are randomly scattered by 10 m to avoid overplotting. Yellow diamonds indicate where captive moorhens were released in October 2021 (only 5 of the 6 release locations are visible on this map).
+<br>
+<br>
+
+
+## Sightings of colour-ringed Gough Buntings
+
+
+In `r format(startreportperiod,'%B %Y')` we observed `r length(unique(GOBU$Band_Number))` colour-ringed Gough Buntings, of which `r length(unique(GOBU$BirdName[!is.na(GOBU$BirdName)]))` were released from temporary captivity during the mouse eradication operation in 2021, and  `r length(unique(GOBU$Band_Number[is.na(GOBU$PreviousObs)]))` of these were seen for the first time since their release. As of `r format(Sys.time(), '%d %B, %Y')`, out of the `r dim(GOBUall[!is.na(GOBUall$Released),])[1]` Gough Buntings released, **`r dim(GOBUall[!is.na(GOBUall$LastObs),])[1]` individuals (`r round((dim(GOBUall[!is.na(GOBUall$LastObs),])[1]/dim(GOBUall[!is.na(GOBUall$Released),])[1])*100)`%) have been seen in the wild**. The details of the recently sighted individual birds and where they were resighted are provided in Table `r ifelse(dim(death_summary)[1]>0,6,5)` - if no individual Gough Buntings were resighted in this month the table is not shown. Note that the vast majority of wild Gough Buntings is not individually colour-ringed, so the sightings reported here are no indication about the overall size of the Gough Bunting population.
+<br>
+
+```{r  GOBU, eval = dim(GOBU)[1]>0, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+options(knitr.kable.NA = '')
+kable(GOBU, caption="Recent sightings of individually marked Gough Buntings",col.names=  c("BirdID","Metal ring","Colour", "Release Location","Previously seen","Last sighting","Last Location"))
+```
+
+<br>
+<br>
+
+## Count of landbirds
+
+In `r format(startreportperiod,'%B %Y')` we conducted `r sum(landbird_summary$n_counts)` counts of `r sum(landbird_summary$n_sites)` transects in `r length(unique(landbird_summary$Habitat_description))` habitat types for the two endemic landbirds, Gough Bunting and Gough Moorhen. The details of the number of birds counted per species are provided in Table 7.
+<br>
+
+```{r  landbird_summary, echo=FALSE,warning=FALSE,error=FALSE,message=FALSE, eval=do_it}
+kable(landbird_summary, caption="Summary of landbird counts on Gough Island",col.names=  c("Habitat","N transects", "N surveys","N Gough Bunting","N Gough Moorhen"))
+```
+
+<br>
+<br>
+<br>
+
+
+<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>
+
+
