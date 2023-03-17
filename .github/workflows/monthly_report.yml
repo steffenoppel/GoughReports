@@ -24,13 +24,13 @@ jobs:
           
       - name: Install dependencies
         run: |
-          install.packages(c('ggplot2','rmarkdown','knitr','remotes','tidyverse','data.table','lubridate','maps','ggpubr','ggmap','grid','gtable','magick'))
+          install.packages(c('ggplot2','rmarkdown','knitr','remotes','tidyverse','data.table','lubridate','maps','ggpubr','ggmap','grid','gtable','magick','tinytex'))
           load("MONTHLY_REPORT_DATA.RData")
 
         shell: Rscript {0}
         
       - name: Render my document to all types
-        run: Rscript -e 'rmarkdown::render("AutomatedMonthlyReport_G68_pdf.Rmd", output_format = "pdf")'
+        run: Rscript -e 'rmarkdown::render("AutomatedMonthlyReport_G68.Rmd", output_format = "all")'
             
       - name: Commit results
         run: |
