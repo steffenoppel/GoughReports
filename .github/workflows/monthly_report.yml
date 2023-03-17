@@ -34,7 +34,7 @@ jobs:
             
       - name: Commit results
         run: |
-          git add output/MonthlyReport*
+          git add output/AutomatedMonthlyReport_G68*
           git commit -m 'Latest report produced' || echo "No changes to commit"
           git push origin || echo "No changes to commit"
   
