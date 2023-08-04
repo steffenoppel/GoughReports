@@ -10,11 +10,11 @@
 
 ## set the general drive where data are held here
 ## each database is expected to be in a subdirectory of this location - if this is not the case you may need to comment out the 'try' lines below
-MYDATADRIVE<-"C:\\STEFFEN\\OneDrive - THE ROYAL SOCIETY FOR THE PROTECTION OF BIRDS\\STEFFEN\\RSPB\\UKOT\\Gough\\DATA"
-MYREPORTDRIVE<-"C:\\STEFFEN\\OneDrive - THE ROYAL SOCIETY FOR THE PROTECTION OF BIRDS\\STEFFEN\\RSPB\\UKOT\\Gough\\Reports\\ScriptedReports\\MonthlyReport"
+#MYDATADRIVE<-"C:\\STEFFEN\\OneDrive - THE ROYAL SOCIETY FOR THE PROTECTION OF BIRDS\\STEFFEN\\RSPB\\UKOT\\Gough\\DATA"
+#MYREPORTDRIVE<-"C:\\STEFFEN\\OneDrive - THE ROYAL SOCIETY FOR THE PROTECTION OF BIRDS\\STEFFEN\\RSPB\\UKOT\\Gough\\Reports\\ScriptedReports\\MonthlyReport"
 
-#MYDATADRIVE<-"S:\\ConSci\\DptShare\\SteffenOppel\\RSPB\\UKOT\\Gough\\DATA"
-#MYREPORTDRIVE<-"S:\\ConSci\\DptShare\\SteffenOppel\\RSPB\\UKOT\\Gough\\Reports\\ScriptedReports\\MonthlyReport"
+MYDATADRIVE<-"C:\\Users\\sop\\Documents\\Steffen\\RSPB\\Gough"
+MYREPORTDRIVE<-"C:\\Users\\sop\\Documents\\Steffen\\RSPB\\Gough"
 
 #MYDATADRIVE<-"C:\\Users\\Gough Conservation\\Documents\\Gough Birders\\Database"
 #MYREPORTDRIVE<-"C:\\Users\\Gough Conservation\\Documents\\Gough Birders\\2022-2023\\12.Monthly reports 2022-23"
@@ -175,7 +175,7 @@ nestvisits<-nestvisits %>% filter(Date>=startreportperiod) %>% filter(Date<endre
 landbirdsurveys<-landbirdsurveys %>% filter(Date>=startreportperiod) %>% filter(Date<endreportperiod)
 landbirdcounts <- landbirdcounts %>% group_by(LandbirdSurveyID,Species) %>% summarise(N=sum(N_birds)) %>%
   spread(key=Species, value=N, fill=0)
-landbirdcounts <- landbirdsurveys %>% left_join(landbirdcounts, by="LandbirdSurveyID", fill=0) %>%
+landbirdcounts <- landbirdsurveys %>% left_join(landbirdcounts, by="LandbirdSurveyID") %>%
   mutate(GOBU=ifelse(is.na(GOBU),0,GOBU),GOMO=ifelse(is.na(GOMO),0,GOMO))
 
 seabirdcounts<-seabirdcounts %>% filter(Date>=startreportperiod) %>% filter(Date<=endreportperiod)
