@@ -119,11 +119,11 @@ GOMOplot <-  bind_rows(GOMOopp,GOMOcam,GOMOplay) %>%
     geom_line(data=GOMOsummary,aes(x=as.Date(first), y=Total), size=2,linetype=1,col="darkred")+
     
     ## format axis ticks
-    scale_y_continuous(name="Total number of moorhen detections", limits=c(0,50),breaks=seq(0,50,10))+
+    scale_y_continuous(name="Total number of moorhen detections", limits=c(0,150),breaks=seq(0,150,30))+
     scale_x_date(name="",date_breaks="1 month", date_labels="%b")+
     
     ### add the gimicky moorhen icon
-    annotation_custom(GOMOicon, xmin=as.Date(ymd("2022-01-01")), xmax=as.Date(ymd("2022-02-01")), ymin=40, ymax=50) +
+    annotation_custom(GOMOicon, xmin=as.Date(ymd("2022-01-01")), xmax=as.Date(ymd("2022-02-01")), ymin=90, ymax=150) +
     
     
     ## beautification of the axes
